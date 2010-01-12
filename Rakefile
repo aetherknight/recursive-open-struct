@@ -4,7 +4,7 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "recursive_open_struct"
+    gem.name = "recursive-open-struct"
     gem.summary = %Q{OpenStruct subclass that returns nested hash attributes as RecursiveOpenStructs}
     gem.description = <<EOF
 RecursiveOpenStruct is a subclass of OpenStruct. It differs from
@@ -19,7 +19,7 @@ Also, nested hashes can still be accessed as hashes:
     ros.a_as_a_hash # { :b => 'c' }
 EOF
     gem.email = "aetherknight@gmail.com"
-    gem.homepage = "http://github.com/aetherknight/recursive_open_struct"
+    gem.homepage = "http://github.com/aetherknight/recursive-open-struct"
     gem.authors = ["William (B.J.) Snow Orvis"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
@@ -50,7 +50,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "recursive_open_struct #{version}"
+  rdoc.title = "recursive-open-struct #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

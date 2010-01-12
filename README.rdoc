@@ -1,4 +1,4 @@
-= recursive_open_struct
+= recursive-open-struct
 
 RecursiveOpenStruct is a subclass of OpenStruct. It differs from
 OpenStruct in that it allows nested hashes to be treated in a recursive
