@@ -59,5 +59,20 @@ describe RecursiveOpenStruct do
       @ros.blah_as_a_hash.should == { :another => 'value' }
     end
 
+    describe "handling loops in the origin Hashes" do
+      before(:each) do
+        h1 = { :a => 'a'}
+        h2 = { :a => 'b', :h1 => h1 }
+        h1[:h2] = h2
+        @ros = RecursiveOpenStruct.new(h2)
+      end
+
+      it { @ros.h1.a.should == 'a' }
+      it { @ros.h1.h2.a.should == 'b' }
+      it { @ros.h1.h2.h1.a.should == 'a' }
+      it { @ros.h1.h2.h1.h2.a.should == 'b' }
+      it { @ros.h1.should == @ros.h1.h2.h1 }
+      it { @ros.h1.should_not == @ros.h1.h2 }
+    end # describe handling loops in the origin Hashes
   end # recursive behavior
 end # describe RecursiveOpenStruct
