@@ -3,6 +3,7 @@ require 'recursive_open_struct'
 
 describe RecursiveOpenStruct do
   describe "behavior it inherits from OpenStruct" do
+
     it "can represent arbitrary data objects" do
       ros = RecursiveOpenStruct.new
       ros.blah = "John Smith"
@@ -22,43 +23,41 @@ describe RecursiveOpenStruct do
       ros.blah.should == "George Washington"
     end
 
-    describe "handling of the arbitrary attributes" do
+    describe "handling of arbitrary attributes" do
+      before(:each) do
+        @ros = RecursiveOpenStruct.new
+        @ros.blah = "John Smith"
+      end
+
       describe "#respond?" do
-        it "responds to an existing key" do
-          ros = RecursiveOpenStruct.new
-          ros.blah = "John Smith"
-          ros.should respond_to :blah
-          ros.should respond_to :blah=
-        end
-        it "does not respond to a nonexistant key" do
-          ros = RecursiveOpenStruct.new
-          ros.should_not respond_to :blah
-          ros.should_not respond_to :blah=
-        end
-      end
+        it { @ros.should respond_to :blah }
+        it { @ros.should respond_to :blah= }
+        it { @ros.should_not respond_to :asdf }
+        it { @ros.should_not respond_to :asdf= }
+      end # describe #respond?
+
       describe "#methods" do
-      it "includes an existing key" do
-          ros = RecursiveOpenStruct.new
-          ros.blah = "John Smith"
-          ros.methods.should be_include "blah"
-          ros.methods.should be_include "blah="
-      end
-      end
-    end
-  end
+        it { @ros.methods.should include "blah" }
+        it { @ros.methods.should include "blah=" }
+        it { @ros.methods.should_not include "asdf" }
+        it { @ros.methods.should_not include "asdf=" }
+      end # describe #methods
+    end # describe handling of arbitrary attributes
+  end # describe behavior it inherits from OpenStruct
 
   describe "recursive behavior" do
-    it "returns accessed hashes as RecursiveOpenStructs instead of hashes" do
+    before(:each) do
       h = { :blah => { :another => 'value' } }
-      ros = RecursiveOpenStruct.new(h)
-      ros.blah.another.should == 'value'
+      @ros = RecursiveOpenStruct.new(h)
+    end
+
+    it "returns accessed hashes as RecursiveOpenStructs instead of hashes" do
+      @ros.blah.another.should == 'value'
     end
 
     it "uses #key_as_a_hash to return key as a Hash" do
-      h = { :blah => { :another => 'value' } }
-      ros = RecursiveOpenStruct.new(h)
-      ros.blah_as_a_hash.should == { :another => 'value' }
+      @ros.blah_as_a_hash.should == { :another => 'value' }
     end
 
-  end
-end
+  end # recursive behavior
+end # describe RecursiveOpenStruct
