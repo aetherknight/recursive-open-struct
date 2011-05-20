@@ -37,10 +37,10 @@ describe RecursiveOpenStruct do
       end # describe #respond?
 
       describe "#methods" do
-        it { @ros.methods.should include "blah" }
-        it { @ros.methods.should include "blah=" }
-        it { @ros.methods.should_not include "asdf" }
-        it { @ros.methods.should_not include "asdf=" }
+        it { @ros.methods.should include :blah }
+        it { @ros.methods.should include :blah= }
+        it { @ros.methods.should_not include :asdf }
+        it { @ros.methods.should_not include :asdf= }
       end # describe #methods
     end # describe handling of arbitrary attributes
   end # describe behavior it inherits from OpenStruct
