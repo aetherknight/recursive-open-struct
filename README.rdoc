@@ -1,7 +1,7 @@
 = recursive-open-struct
 
-RecursiveOpenStruct is a subclass of OpenStruct. It differs from
-OpenStruct in that it allows nested hashes to be treated in a recursive
+RecursiveOpenStruct is a extension of OpenStruct.
+It enhance OpenStruct in that it allows nested hashes to be treated in a recursive
 fashion. For example:
 
     ros = RecursiveOpenStruct.new({ :a => { :b => 'c' } })
