@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["William (B.J.) Snow Orvis"]
-  s.date = %q{2011-05-20}
+  s.date = %q{2011-05-23}
   s.description = %q{RecursiveOpenStruct is a subclass of OpenStruct. It differs from
 OpenStruct in that it allows nested hashes to be treated in a recursive
 fashion. For example:
@@ -36,6 +36,7 @@ Also, nested hashes can still be accessed as hashes:
     "Rakefile",
     "VERSION",
     "lib/recursive_open_struct.rb",
+    "recursive-open-struct.gemspec",
     "spec/recursive_open_struct_spec.rb",
     "spec/spec_helper.rb"
   ]
