@@ -11,6 +11,16 @@ Also, nested hashes can still be accessed as hashes:
 
     ros.a_as_a_hash # { :b => 'c' }
 
+== Installation
+
+So easy.
+
+If you use bundler, just throw that in your gemfile :
+  gem 'recursive-open-struct'
+
+You may also install the gem manually :
+  gem install recursive-open-struct
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
