@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{recursive-open-struct}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{William (B.J.) Snow Orvis}]
-  s.date = %q{2011-05-25}
+  s.date = %q{2011-05-31}
   s.description = %q{RecursiveOpenStruct is a subclass of OpenStruct. It differs from
 OpenStruct in that it allows nested hashes to be treated in a recursive
 fashion. For example:
