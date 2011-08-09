@@ -1,15 +1,27 @@
 = recursive-open-struct
 
-RecursiveOpenStruct is a subclass of OpenStruct. It differs from
-OpenStruct in that it allows nested hashes to be treated in a recursive
+RecursiveOpenStruct is a extension of OpenStruct.
+It enhance OpenStruct in that it allows nested hashes to be treated in a recursive
 fashion. For example:
+  ros = RecursiveOpenStruct.new( { :fooa => { :foob => 'fooc' } } )
+can now be accessed this way :
+  ros.fooa.foob # 'fooc'
 
-    ros = RecursiveOpenStruct.new({ :a => { :b => 'c' } })
-    ros.a.b # 'c'
+Also, if needed, nested hashes can still be accessed as hashes :
 
-Also, nested hashes can still be accessed as hashes:
+  ros.fooa_as_a_hash # { :foob => 'fooc' }
 
-    ros.a_as_a_hash # { :b => 'c' }
+== Installation
+
+Available as a gem in rubygems, the default gem repository.
+
+If you use bundler, just throw that in your gemfile :
+  gem 'recursive-open-struct'
+
+You may also install the gem manually :
+  gem install recursive-open-struct
+
+Isn't that easy ? (Special thanks to the jeweler tool)
 
 == Note on Patches/Pull Requests
  
