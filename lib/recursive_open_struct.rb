@@ -48,7 +48,7 @@ class RecursiveOpenStruct < OpenStruct
       # (everything except hashes)
       data_indent = ostrct_or_hash \
         .reject { |k, v| v.is_a?(RecursiveOpenStruct) || v.is_a?(Hash) } \
-          .max {|a,b| a[0].to_s.length <=> b[0].to_s.length}[0].length
+          .max {|a,b| a[0].to_s.length <=> b[0].to_s.length}[0].to_s.length
       # puts "max length = #{data_indent}"
 
       ostrct_or_hash.each do |key, value|
