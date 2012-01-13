@@ -46,8 +46,8 @@ class RecursiveOpenStruct < OpenStruct
       # We'll display the key values like this :    key =  value
       # to align display, we look for the maximum key length of the data that will be displayed
       # (everything except hashes)
-      data_indent = ostrct_or_hash
-        .reject { |k, v| v.is_a?(RecursiveOpenStruct) || v.is_a?(Hash) }
+      data_indent = ostrct_or_hash \
+        .reject { |k, v| v.is_a?(RecursiveOpenStruct) || v.is_a?(Hash) } \
           .max {|a,b| a[0].to_s.length <=> b[0].to_s.length}[0].length
       # puts "max length = #{data_indent}"
 
