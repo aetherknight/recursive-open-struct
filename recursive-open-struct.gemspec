@@ -35,7 +35,7 @@ Also, nested hashes can still be accessed as hashes:
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "lib/recursive_open_struct.rb",
+    "lib/recursive-open-struct.rb",
     "recursive-open-struct.gemspec",
     "spec/recursive_open_struct_spec.rb",
     "spec/spec_helper.rb"
