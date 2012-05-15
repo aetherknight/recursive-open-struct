@@ -8,7 +8,13 @@ class RecursiveOpenStruct < OpenStruct
       class << self; self; end.class_eval do
         define_method(name) {
           v = @table[name]
-          v.is_a?(Hash) ? RecursiveOpenStruct.new(v) : v
+          if v.is_a?(Hash)
+            RecursiveOpenStruct.new(v)
+          elsif v.is_a?(Array)
+            v.map { |a| RecursiveOpenStruct.new(a) }
+          else
+            v
+          end
         }
         define_method("#{name}=") { |x| modifiable[name] = x }
         define_method("#{name}_as_a_hash") { @table[name] }
