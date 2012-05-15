@@ -75,6 +75,19 @@ describe RecursiveOpenStruct do
       it { @ros.h1.should == @ros.h1.h2.h1 }
       it { @ros.h1.should_not == @ros.h1.h2 }
     end # describe handling loops in the origin Hashes
+
+    describe 'lists' do
+      let(:blah_list) { [ { :id => '1' }, { :id => '2' } ] }
+      before(:each) do
+        h = { :blah => blah_list }
+        @ros = RecursiveOpenStruct.new(h)
+      end
+
+      it { @ros.blah.length.should == 2 }
+      it { @ros.blah[0].id.should == '1' }
+      it { @ros.blah[1].id.should == '2' }
+      it { @ros.blah_as_a_hash.should == blah_list }
+    end
   end # recursive behavior
 
   describe "additionnel features" do
