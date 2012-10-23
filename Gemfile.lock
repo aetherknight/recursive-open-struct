@@ -27,4 +27,5 @@ PLATFORMS
 DEPENDENCIES
   bundler
   jeweler
+  rdoc
   rspec
