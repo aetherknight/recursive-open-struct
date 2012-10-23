@@ -17,15 +17,15 @@ class RecursiveOpenStruct < OpenStruct
     name
   end
   
-  def debug_inspect(indent_level = 0, recursion_limit = 12)
-    display_recursive_open_struct(@table, indent_level, recursion_limit)
+  def debug_inspect(io = STDOUT, indent_level = 0, recursion_limit = 12)
+    display_recursive_open_struct(io, @table, indent_level, recursion_limit)
   end
   
-  def display_recursive_open_struct(ostrct_or_hash, indent_level, recursion_limit)
+  def display_recursive_open_struct(io, ostrct_or_hash, indent_level, recursion_limit)
     
     if recursion_limit <= 0 then
       # protection against recursive structure (like in the tests)
-      puts '  '*indent_level + '(recursion limit reached)'
+      io.puts '  '*indent_level + '(recursion limit reached)'
     else
       #puts ostrct_or_hash.inspect
       if ostrct_or_hash.is_a?(RecursiveOpenStruct) then
@@ -42,10 +42,10 @@ class RecursiveOpenStruct < OpenStruct
       
       ostrct_or_hash.each do |key, value|
         if (value.is_a?(RecursiveOpenStruct) || value.is_a?(Hash)) then
-          puts '  '*indent_level + key.to_s + '.'
-          display_recursive_open_struct(value, indent_level + 1, recursion_limit - 1)
+          io.puts '  '*indent_level + key.to_s + '.'
+          display_recursive_open_struct(io, value, indent_level + 1, recursion_limit - 1)
         else
-          puts '  '*indent_level + key.to_s + ' '*(data_indent - key.to_s.length) + ' = ' + value.inspect
+          io.puts '  '*indent_level + key.to_s + ' '*(data_indent - key.to_s.length) + ' = ' + value.inspect
         end
       end
     end

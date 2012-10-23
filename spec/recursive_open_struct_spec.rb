@@ -87,7 +87,36 @@ describe RecursiveOpenStruct do
     end
     
     it "should have a simple way of display" do
-      @ros.debug_inspect
+      @output = <<-QUOTE
+a = "b"
+h1.
+  a = "a"
+  h2.
+    a = "b"
+    h1.
+      a = "a"
+      h2.
+        a = "b"
+        h1.
+          a = "a"
+          h2.
+            a = "b"
+            h1.
+              a = "a"
+              h2.
+                a = "b"
+                h1.
+                  a = "a"
+                  h2.
+                    a = "b"
+                    h1.
+                      a = "a"
+                      h2.
+                        (recursion limit reached)
+QUOTE
+      @io = StringIO.new
+      @ros.debug_inspect(@io)
+      @io.string.should == @output
     end
   end # additionnel features
   
