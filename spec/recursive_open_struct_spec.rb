@@ -76,18 +76,33 @@ describe RecursiveOpenStruct do
       it { @ros.h1.should_not == @ros.h1.h2 }
     end # describe handling loops in the origin Hashes
 
-    describe 'lists' do
-      let(:blah_list) { [ { :id => '1' }, { :id => '2' } ] }
-      before(:each) do
-        h = { :blah => blah_list }
-        @ros = RecursiveOpenStruct.new(h)
-      end
+    describe 'recursing over arrays' do
+      let(:blah_list) { [ { :id => '1' }, { :id => '2' }, 'baz' ] }
+      let(:h) { { :blah => blah_list } }
 
-      it { @ros.blah.length.should == 2 }
-      it { @ros.blah[0].id.should == '1' }
-      it { @ros.blah[1].id.should == '2' }
-      it { @ros.blah_as_a_hash.should == blah_list }
-    end
+      context "when recursing over arrays is enabled" do
+        before(:each) do
+          @ros = RecursiveOpenStruct.new(h, :recurse_over_arrays => true)
+        end
+
+        it { @ros.blah.length.should == 3 }
+        it { @ros.blah[0].id.should == '1' }
+        it { @ros.blah[1].id.should == '2' }
+        it { @ros.blah_as_a_hash.should == blah_list }
+        it { @ros.blah[2].should == 'baz' }
+      end # when recursing over arrays is enabled
+
+      context "when recursing over arrays is disabled" do
+        before(:each) do
+          @ros = RecursiveOpenStruct.new(h)
+        end
+
+        it { @ros.blah.length.should == 3 }
+        it { @ros.blah[0].should == { :id => '1' } }
+        it { @ros.blah[0][:id].should == '1' }
+      end # when recursing over arrays is disabled
+
+    end # recursing over arrays
   end # recursive behavior
   
   describe "additionnel features" do
