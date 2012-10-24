@@ -77,7 +77,7 @@ describe RecursiveOpenStruct do
     end # describe handling loops in the origin Hashes
 
     describe 'recursing over arrays' do
-      let(:blah_list) { [ { :id => '1' }, { :id => '2' }, 'baz' ] }
+      let(:blah_list) { [ { :foo => '1' }, { :foo => '2' }, 'baz' ] }
       let(:h) { { :blah => blah_list } }
 
       context "when recursing over arrays is enabled" do
@@ -86,8 +86,8 @@ describe RecursiveOpenStruct do
         end
 
         it { @ros.blah.length.should == 3 }
-        it { @ros.blah[0].id.should == '1' }
-        it { @ros.blah[1].id.should == '2' }
+        it { @ros.blah[0].foo.should == '1' }
+        it { @ros.blah[1].foo.should == '2' }
         it { @ros.blah_as_a_hash.should == blah_list }
         it { @ros.blah[2].should == 'baz' }
       end # when recursing over arrays is enabled
@@ -98,8 +98,8 @@ describe RecursiveOpenStruct do
         end
 
         it { @ros.blah.length.should == 3 }
-        it { @ros.blah[0].should == { :id => '1' } }
-        it { @ros.blah[0][:id].should == '1' }
+        it { @ros.blah[0].should == { :foo => '1' } }
+        it { @ros.blah[0][:foo].should == '1' }
       end # when recursing over arrays is disabled
 
     end # recursing over arrays
@@ -144,7 +144,31 @@ h1.
 QUOTE
       @io = StringIO.new
       @ros.debug_inspect(@io)
-      @io.string.should == @output
+      @io.string.should match /^a = "b"$/
+      @io.string.should match /^h1\.$/
+      @io.string.should match /^  a = "a"$/
+      @io.string.should match /^  h2\.$/
+      @io.string.should match /^    a = "b"$/
+      @io.string.should match /^    h1\.$/
+      @io.string.should match /^      a = "a"$/
+      @io.string.should match /^      h2\.$/
+      @io.string.should match /^        a = "b"$/
+      @io.string.should match /^        h1\.$/
+      @io.string.should match /^          a = "a"$/
+      @io.string.should match /^          h2\.$/
+      @io.string.should match /^            a = "b"$/
+      @io.string.should match /^            h1\.$/
+      @io.string.should match /^              a = "a"$/
+      @io.string.should match /^              h2\.$/
+      @io.string.should match /^                a = "b"$/
+      @io.string.should match /^                h1\.$/
+      @io.string.should match /^                  a = "a"$/
+      @io.string.should match /^                  h2\.$/
+      @io.string.should match /^                    a = "b"$/
+      @io.string.should match /^                    h1\.$/
+      @io.string.should match /^                      a = "a"$/
+      @io.string.should match /^                      h2\.$/
+      @io.string.should match /^                        \(recursion limit reached\)$/
     end
   end # additionnel features
 
