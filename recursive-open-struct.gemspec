@@ -4,24 +4,14 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{recursive-open-struct}
-  s.version = "0.2.1"
+  s.name = "recursive-open-struct"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{William (B.J.) Snow Orvis}]
-  s.date = %q{2011-05-31}
-  s.description = %q{RecursiveOpenStruct is a subclass of OpenStruct. It differs from
-OpenStruct in that it allows nested hashes to be treated in a recursive
-fashion. For example:
-
-    ros = RecursiveOpenStruct.new({ :a => { :b => 'c' } })
-    ros.a.b # 'c'
-
-Also, nested hashes can still be accessed as hashes:
-
-    ros.a_as_a_hash # { :b => 'c' }
-}
-  s.email = %q{aetherknight@gmail.com}
+  s.authors = ["William (B.J.) Snow Orvis"]
+  s.date = "2012-10-24"
+  s.description = "RecursiveOpenStruct is a subclass of OpenStruct. It differs from\nOpenStruct in that it allows nested hashes to be treated in a recursive\nfashion. For example:\n\n    ros = RecursiveOpenStruct.new({ :a => { :b => 'c' } })\n    ros.a.b # 'c'\n\nAlso, nested hashes can still be accessed as hashes:\n\n    ros.a_as_a_hash # { :b => 'c' }\n"
+  s.email = "aetherknight@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -35,16 +25,17 @@ Also, nested hashes can still be accessed as hashes:
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "lib/recursive-open-struct.rb",
     "lib/recursive_open_struct.rb",
     "recursive-open-struct.gemspec",
     "spec/recursive_open_struct_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/aetherknight/recursive-open-struct}
-  s.licenses = [%q{MIT}]
-  s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.3}
-  s.summary = %q{OpenStruct subclass that returns nested hash attributes as RecursiveOpenStructs}
+  s.homepage = "http://github.com/aetherknight/recursive-open-struct"
+  s.licenses = ["MIT"]
+  s.require_paths = ["lib"]
+  s.rubygems_version = "1.8.23"
+  s.summary = "OpenStruct subclass that returns nested hash attributes as RecursiveOpenStructs"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
@@ -53,18 +44,18 @@ Also, nested hashes can still be accessed as hashes:
       s.add_development_dependency(%q<rspec>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<rdoc>, [">= 0"])
     else
       s.add_dependency(%q<rspec>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
-      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<rdoc>, [">= 0"])
     end
   else
     s.add_dependency(%q<rspec>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
-    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<rdoc>, [">= 0"])
   end
 end
 
