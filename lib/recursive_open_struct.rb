@@ -7,6 +7,10 @@ class RecursiveOpenStruct < OpenStruct
     super(h)
   end
 
+  def to_h
+    @table.dup
+  end
+
   def new_ostruct_member(name)
     name = name.to_sym
     unless self.respond_to?(name)

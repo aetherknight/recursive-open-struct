@@ -17,6 +17,12 @@ describe RecursiveOpenStruct do
       ros.asdf.should == "John Smith"
     end
 
+    it "can be converted back to a hash" do
+      h = { :asdf => 'John Smith' }
+      ros = RecursiveOpenStruct.new(h)
+      ros.to_h.should == h
+    end
+
     it "can modify an existing key" do
       h = { :blah => 'John Smith' }
       ros = RecursiveOpenStruct.new(h)
