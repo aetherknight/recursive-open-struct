@@ -8,15 +8,18 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 namespace :spec do
-  desc "Create rspec code coverage (1.9+)"
-  task :coverage do
-    ENV['COVERAGE'] = 'true'
-    Rake::Task["spec"].execute
-  end
-  desc "Rspec code coverage (1.8.7)"
-  RSpec::Core::RakeTask.new(:rcov) do |spec|
-    spec.pattern = 'spec/**/*_spec.rb'
-    spec.rcov = true
+  if RUBY_VERSION =~ /^1\.8/
+    desc "Rspec code coverage (1.8.7)"
+    RSpec::Core::RakeTask.new(:coverage) do |spec|
+      spec.pattern = 'spec/**/*_spec.rb'
+      spec.rcov = true
+    end
+  else
+    desc "Rspec code coverage (1.9+)"
+    task :coverage do
+      ENV['COVERAGE'] = 'true'
+      Rake::Task["spec"].execute
+    end
   end
 end
 
