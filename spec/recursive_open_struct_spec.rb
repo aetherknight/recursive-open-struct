@@ -82,30 +82,64 @@ describe RecursiveOpenStruct do
       it { @ros.h1.should_not == @ros.h1.h2 }
     end # describe handling loops in the origin Hashes
 
+    it "can modify a key of a sub-element" do
+      h = {
+        :blah => {
+          :blargh => 'Brad'
+        }
+      }
+      ros = RecursiveOpenStruct.new(h)
+      ros.blah.blargh = "Janet"
+      ros.blah.blargh.should == "Janet"
+    end
+
+    context "after a sub-element has been modified" do
+      let(:hash) do
+        {
+          :blah => {
+            :blargh => 'Brad'
+          }
+        }
+      end
+      subject { RecursiveOpenStruct.new(hash) }
+      before(:each) { subject.blah.blargh = "Janet" }
+      it "returns a hash that contains those modifications" do
+        subject.to_h.should == { :blah => { :blargh => "Janet" } }
+      end
+    end
+
+
     describe 'recursing over arrays' do
       let(:blah_list) { [ { :foo => '1' }, { :foo => '2' }, 'baz' ] }
       let(:h) { { :blah => blah_list } }
 
       context "when recursing over arrays is enabled" do
-        before(:each) do
-          @ros = RecursiveOpenStruct.new(h, :recurse_over_arrays => true)
+        subject { RecursiveOpenStruct.new(h, :recurse_over_arrays => true) }
+
+        it { subject.blah.length.should == 3 }
+        it { subject.blah[0].foo.should == '1' }
+        it { subject.blah[1].foo.should == '2' }
+        it { subject.blah_as_a_hash.should == blah_list }
+        it { subject.blah[2].should == 'baz' }
+        it "Retains changes across Array lookups" do
+          subject.blah[1].foo = "Dr Scott"
+          subject.blah[1].foo.should == "Dr Scott"
+        end
+        it "propagates the changes through to .to_h across Array lookups" do
+          subject.blah[1].foo = "Dr Scott"
+          subject.to_h.should == {
+            :blah => [ { :foo => '1' }, { :foo => "Dr Scott" }, 'baz' ]
+          }
         end
 
-        it { @ros.blah.length.should == 3 }
-        it { @ros.blah[0].foo.should == '1' }
-        it { @ros.blah[1].foo.should == '2' }
-        it { @ros.blah_as_a_hash.should == blah_list }
-        it { @ros.blah[2].should == 'baz' }
       end # when recursing over arrays is enabled
 
       context "when recursing over arrays is disabled" do
-        before(:each) do
-          @ros = RecursiveOpenStruct.new(h)
-        end
+        subject { RecursiveOpenStruct.new(h) }
 
-        it { @ros.blah.length.should == 3 }
-        it { @ros.blah[0].should == { :foo => '1' } }
-        it { @ros.blah[0][:foo].should == '1' }
+        it { subject.blah.length.should == 3 }
+        it { subject.blah[0].should == { :foo => '1' } }
+        it { subject.blah[0][:foo].should == '1' }
       end # when recursing over arrays is disabled
 
     end # recursing over arrays
