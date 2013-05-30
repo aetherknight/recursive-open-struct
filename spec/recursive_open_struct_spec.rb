@@ -131,6 +131,31 @@ describe RecursiveOpenStruct do
           }
         end
 
+        context "when array is nested deeper" do
+          let(:deep_hash) { { :foo => { :blah => blah_list } } }
+          subject { RecursiveOpenStruct.new(deep_hash, :recurse_over_arrays => true) }
+
+          it { subject.foo.blah.length.should == 3 }
+          it "Retains changes across Array lookups" do
+            subject.foo.blah[1].foo = "Dr Scott"
+            subject.foo.blah[1].foo.should == "Dr Scott"
+          end
+
+        end
+
+        context "when array is in an array" do
+          let(:haah) { { :blah => [ blah_list ] } }
+          subject { RecursiveOpenStruct.new(haah, :recurse_over_arrays => true) }
+
+          it { subject.blah.length.should == 1 }
+          it { subject.blah[0].length.should == 3 }
+          it "Retains changes across Array lookups" do
+            subject.blah[0][1].foo = "Dr Scott"
+            subject.blah[0][1].foo.should == "Dr Scott"
+          end
+
+        end
+
       end # when recursing over arrays is enabled
 
       context "when recursing over arrays is disabled" do

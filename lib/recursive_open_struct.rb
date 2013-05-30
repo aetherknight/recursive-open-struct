@@ -28,9 +28,9 @@ class RecursiveOpenStruct < OpenStruct
         define_method(name) do
           v = @table[name]
           if v.is_a?(Hash)
-            @sub_elements[name] ||= RecursiveOpenStruct.new(v)
+            @sub_elements[name] ||= RecursiveOpenStruct.new(v, :recurse_over_arrays => @recurse_over_arrays)
           elsif v.is_a?(Array) and @recurse_over_arrays
-            @sub_elements[name] ||= v.map { |a| (a.is_a? Hash) ? RecursiveOpenStruct.new(a, :recurse_over_arrays => true) : a }
+            @sub_elements[name] ||= recurse_over_array v
           else
             v
           end
@@ -40,6 +40,18 @@ class RecursiveOpenStruct < OpenStruct
       end
     end
     name
+  end
+
+  def recurse_over_array array
+    array.map do |a|
+      if a.is_a? Hash
+        RecursiveOpenStruct.new(a, :recurse_over_arrays => true)
+      elsif a.is_a? Array
+        recurse_over_array a
+      else
+        a
+      end
+    end
   end
 
   def debug_inspect(io = STDOUT, indent_level = 0, recursion_limit = 12)
