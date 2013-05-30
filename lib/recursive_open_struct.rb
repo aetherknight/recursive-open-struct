@@ -28,7 +28,7 @@ class RecursiveOpenStruct < OpenStruct
         define_method(name) do
           v = @table[name]
           if v.is_a?(Hash)
-            @sub_elements[name] ||= RecursiveOpenStruct.new(v)
+            @sub_elements[name] ||= RecursiveOpenStruct.new(v, :recurse_over_arrays => @recurse_over_arrays)
           elsif v.is_a?(Array) and @recurse_over_arrays
             @sub_elements[name] ||= v.map { |a| (a.is_a? Hash) ? RecursiveOpenStruct.new(a, :recurse_over_arrays => true) : a }
           else
