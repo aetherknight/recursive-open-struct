@@ -17,12 +17,6 @@ describe RecursiveOpenStruct do
       ros.asdf.should == "John Smith"
     end
 
-    it "can be converted back to a hash" do
-      h = { :asdf => 'John Smith' }
-      ros = RecursiveOpenStruct.new(h)
-      ros.to_h.should == h
-    end
-
     it "can modify an existing key" do
       h = { :blah => 'John Smith' }
       ros = RecursiveOpenStruct.new(h)
@@ -31,55 +25,60 @@ describe RecursiveOpenStruct do
     end
 
     describe "handling of arbitrary attributes" do
+      subject { RecursiveOpenStruct.new }
       before(:each) do
-        @ros = RecursiveOpenStruct.new
-        @ros.blah = "John Smith"
+        subject.blah = "John Smith"
       end
 
       describe "#respond?" do
-        it { @ros.should respond_to :blah }
-        it { @ros.should respond_to :blah= }
-        it { @ros.should_not respond_to :asdf }
-        it { @ros.should_not respond_to :asdf= }
+        it { subject.should respond_to :blah }
+        it { subject.should respond_to :blah= }
+        it { subject.should_not respond_to :asdf }
+        it { subject.should_not respond_to :asdf= }
       end # describe #respond?
 
       describe "#methods" do
-        it { @ros.methods.map(&:to_sym).should include :blah }
-        it { @ros.methods.map(&:to_sym).should include :blah= }
-        it { @ros.methods.map(&:to_sym).should_not include :asdf }
-        it { @ros.methods.map(&:to_sym).should_not include :asdf= }
+        it { subject.methods.map(&:to_sym).should include :blah }
+        it { subject.methods.map(&:to_sym).should include :blah= }
+        it { subject.methods.map(&:to_sym).should_not include :asdf }
+        it { subject.methods.map(&:to_sym).should_not include :asdf= }
       end # describe #methods
     end # describe handling of arbitrary attributes
   end # describe behavior it inherits from OpenStruct
 
-  describe "recursive behavior" do
-    before(:each) do
-      h = { :blah => { :another => 'value' } }
-      @ros = RecursiveOpenStruct.new(h)
+  describe "improvements on OpenStruct" do
+    it "can be converted back to a hash" do
+      h = { :asdf => 'John Smith' }
+      ros = RecursiveOpenStruct.new(h)
+      ros.to_h.should == h
     end
+  end
+
+  describe "recursive behavior" do
+    let(:h) { { :blah => { :another => 'value' } } }
+    subject { RecursiveOpenStruct.new(h) }
 
     it "returns accessed hashes as RecursiveOpenStructs instead of hashes" do
-      @ros.blah.another.should == 'value'
+      subject.blah.another.should == 'value'
     end
 
     it "uses #key_as_a_hash to return key as a Hash" do
-      @ros.blah_as_a_hash.should == { :another => 'value' }
+      subject.blah_as_a_hash.should == { :another => 'value' }
     end
 
     describe "handling loops in the origin Hashes" do
-      before(:each) do
-        h1 = { :a => 'a'}
-        h2 = { :a => 'b', :h1 => h1 }
-        h1[:h2] = h2
-        @ros = RecursiveOpenStruct.new(h2)
-      end
+      let(:h1) { { :a => 'a'} }
+      let(:h2) { { :a => 'b', :h1 => h1 } }
+      before(:each) { h1[:h2] = h2 }
 
-      it { @ros.h1.a.should == 'a' }
-      it { @ros.h1.h2.a.should == 'b' }
-      it { @ros.h1.h2.h1.a.should == 'a' }
-      it { @ros.h1.h2.h1.h2.a.should == 'b' }
-      it { @ros.h1.should == @ros.h1.h2.h1 }
-      it { @ros.h1.should_not == @ros.h1.h2 }
+      subject { RecursiveOpenStruct.new(h2) }
+
+      it { subject.h1.a.should == 'a' }
+      it { subject.h1.h2.a.should == 'b' }
+      it { subject.h1.h2.h1.a.should == 'a' }
+      it { subject.h1.h2.h1.h2.a.should == 'b' }
+      it { subject.h1.should == subject.h1.h2.h1 }
+      it { subject.h1.should_not == subject.h1.h2 }
     end # describe handling loops in the origin Hashes
 
     it "can modify a key of a sub-element" do
