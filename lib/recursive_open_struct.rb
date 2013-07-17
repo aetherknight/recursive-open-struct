@@ -28,7 +28,7 @@ class RecursiveOpenStruct < OpenStruct
         define_method(name) do
           v = @table[name]
           if v.is_a?(Hash)
-            @sub_elements[name] ||= RecursiveOpenStruct.new(v, :recurse_over_arrays => @recurse_over_arrays)
+            @sub_elements[name] ||= self.class.new(v, :recurse_over_arrays => @recurse_over_arrays)
           elsif v.is_a?(Array) and @recurse_over_arrays
             @sub_elements[name] ||= recurse_over_array v
           else
@@ -45,7 +45,7 @@ class RecursiveOpenStruct < OpenStruct
   def recurse_over_array array
     array.map do |a|
       if a.is_a? Hash
-        RecursiveOpenStruct.new(a, :recurse_over_arrays => true)
+        self.class.new(a, :recurse_over_arrays => true)
       elsif a.is_a? Array
         recurse_over_array a
       else
@@ -65,7 +65,7 @@ class RecursiveOpenStruct < OpenStruct
       io.puts '  '*indent_level + '(recursion limit reached)'
     else
       #puts ostrct_or_hash.inspect
-      if ostrct_or_hash.is_a?(RecursiveOpenStruct) then
+      if ostrct_or_hash.is_a?(self.class) then
         ostrct_or_hash = ostrct_or_hash.marshal_dump
       end
 
@@ -73,12 +73,12 @@ class RecursiveOpenStruct < OpenStruct
       # to align display, we look for the maximum key length of the data that will be displayed
       # (everything except hashes)
       data_indent = ostrct_or_hash \
-        .reject { |k, v| v.is_a?(RecursiveOpenStruct) || v.is_a?(Hash) } \
+        .reject { |k, v| v.is_a?(self.class) || v.is_a?(Hash) } \
           .max {|a,b| a[0].to_s.length <=> b[0].to_s.length}[0].to_s.length
       # puts "max length = #{data_indent}"
 
       ostrct_or_hash.each do |key, value|
-        if (value.is_a?(RecursiveOpenStruct) || value.is_a?(Hash)) then
+        if (value.is_a?(self.class) || value.is_a?(Hash)) then
           io.puts '  '*indent_level + key.to_s + '.'
           display_recursive_open_struct(io, value, indent_level + 1, recursion_limit - 1)
         else

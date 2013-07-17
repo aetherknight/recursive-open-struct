@@ -234,6 +234,14 @@ QUOTE
       @io.string.should match /^                      h2\.$/
       @io.string.should match /^                        \(recursion limit reached\)$/
     end
+
+    it "creates nested objects via subclass" do
+      RecursiveOpenStructSubClass = Class.new(RecursiveOpenStruct)
+      
+      rossc = RecursiveOpenStructSubClass.new({ :one => [{:two => :three}] }, recurse_over_arrays: true)
+
+      rossc.one.first.class.should == RecursiveOpenStructSubClass
+    end
   end # additionnel features
 
 end # describe RecursiveOpenStruct
