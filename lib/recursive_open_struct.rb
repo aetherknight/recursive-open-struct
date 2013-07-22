@@ -4,21 +4,27 @@ class RecursiveOpenStruct < OpenStruct
   VERSION = "0.4.3"
 
   def initialize(h=nil, args={})
-    @recurse_over_arrays = args.fetch(:recurse_over_arrays,false)
+    @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
     super(h)
-    @sub_elements = {}
   end
 
   def to_h
-    @table.dup.update(@sub_elements) do |k, oldval, newval|
-      if newval.kind_of?(self.class)
-        newval.to_h
-      elsif newval.kind_of?(Array)
-        newval.map { |a| a.kind_of?(self.class) ? a.to_h : a }
+    output = {}
+
+    @table.each do |k, v|
+      output[k] = case v
+      when RecursiveOpenStruct
+        v.to_h
+      when Array
+        v.map do |el|
+          el.respond_to?(:to_h) ? el.to_h : el
+        end
       else
-        raise "Cached value of unsupported type: #{newval.inspect}"
+        v
       end
     end
+
+    output
   end
 
   def new_ostruct_member(name)
@@ -28,9 +34,9 @@ class RecursiveOpenStruct < OpenStruct
         define_method(name) do
           v = @table[name]
           if v.is_a?(Hash)
-            @sub_elements[name] ||= self.class.new(v, :recurse_over_arrays => @recurse_over_arrays)
+            @table[name] = self.class.new(v, :recurse_over_arrays => @recurse_over_arrays)
           elsif v.is_a?(Array) and @recurse_over_arrays
-            @sub_elements[name] ||= recurse_over_array v
+            @table[name] = recurse_over_array v
           else
             v
           end
