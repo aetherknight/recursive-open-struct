@@ -77,7 +77,6 @@ describe RecursiveOpenStruct do
       it { subject.h1.h2.a.should == 'b' }
       it { subject.h1.h2.h1.a.should == 'a' }
       it { subject.h1.h2.h1.h2.a.should == 'b' }
-      it { subject.h1.should == subject.h1.h2.h1 }
       it { subject.h1.should_not == subject.h1.h2 }
     end # describe handling loops in the origin Hashes
 
@@ -104,6 +103,10 @@ describe RecursiveOpenStruct do
       before(:each) { subject.blah.blargh = "Janet" }
       it "returns a hash that contains those modifications" do
         subject.to_h.should == { :blah => { :blargh => "Janet" } }
+      end
+
+      it "reflects the change at the root node" do
+        subject.to_s.should =~ /Janet/
       end
     end
 
@@ -233,6 +236,14 @@ QUOTE
       @io.string.should match /^                      a = "a"$/
       @io.string.should match /^                      h2\.$/
       @io.string.should match /^                        \(recursion limit reached\)$/
+    end
+
+    it "creates nested objects via subclass" do
+      RecursiveOpenStructSubClass = Class.new(RecursiveOpenStruct)
+      
+      rossc = RecursiveOpenStructSubClass.new({ :one => [{:two => :three}] }, recurse_over_arrays: true)
+
+      rossc.one.first.class.should == RecursiveOpenStructSubClass
     end
   end # additionnel features
 
