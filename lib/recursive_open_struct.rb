@@ -1,7 +1,7 @@
 require 'ostruct'
 
 class RecursiveOpenStruct < OpenStruct
-  VERSION = "0.4.3"
+  VERSION = "0.4.4"
 
   def initialize(h=nil, args={})
     @recurse_over_arrays = args.fetch(:recurse_over_arrays,false)
