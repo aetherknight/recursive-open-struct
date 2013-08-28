@@ -35,3 +35,11 @@ end
 
 task :default => :spec
 
+task :fix_permissions do
+  File.umask 0022
+  filelist = `git ls-files`.split("\n")
+  FileUtils.chmod 0644, filelist, :verbose => true
+  FileUtils.chmod 0755, ['lib','spec'], :verbose => true
+end
+
+task :build => :fix_permissions
