@@ -21,6 +21,10 @@ class RecursiveOpenStruct < OpenStruct
     end
   end
 
+  def respond_to?(name)
+    super or @table.key?(name.to_sym)
+  end
+
   def new_ostruct_member(name)
     name = name.to_sym
     unless self.respond_to?(name)
