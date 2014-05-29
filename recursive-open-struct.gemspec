@@ -36,5 +36,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<rspec>, [">= 0"])
   s.add_development_dependency(%q<bundler>, [">= 0"])
   s.add_development_dependency(%q<rdoc>, [">= 0"])
+  s.add_development_dependency(%q<rake>, [">= 0"])
 end
 
