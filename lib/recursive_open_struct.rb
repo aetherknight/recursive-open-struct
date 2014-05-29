@@ -21,6 +21,8 @@ class RecursiveOpenStruct < OpenStruct
     end
   end
 
+  alias_method :to_hash, :to_h
+
   def new_ostruct_member(name)
     name = name.to_sym
     unless self.respond_to?(name)

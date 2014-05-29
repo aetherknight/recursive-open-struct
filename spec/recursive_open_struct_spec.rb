@@ -48,9 +48,11 @@ describe RecursiveOpenStruct do
 
   describe "improvements on OpenStruct" do
     it "can be converted back to a hash" do
-      h = { :asdf => 'John Smith' }
+      blank_obj = Object.new
+      h = {:asdf => 'John Smith', :foo => [{:bar => blank_obj}, {:baz => nil}]}
       ros = RecursiveOpenStruct.new(h)
       ros.to_h.should == h
+      ros.to_hash.should == h
     end
   end
 
@@ -237,7 +239,7 @@ QUOTE
 
     it "creates nested objects via subclass" do
       RecursiveOpenStructSubClass = Class.new(RecursiveOpenStruct)
-      
+
       rossc = RecursiveOpenStructSubClass.new({ :one => [{:two => :three}] }, recurse_over_arrays: true)
 
       rossc.one.first.class.should == RecursiveOpenStructSubClass
