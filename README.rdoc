@@ -47,4 +47,4 @@ You may also install the gem manually :
 
 == Copyright
 
-Copyright (c) 2010 William (B.J.) Snow Orvis. See LICENSE for details.
+Copyright (c) 2009-2015 William (B.J.) Snow Orvis. See LICENSE for details.
