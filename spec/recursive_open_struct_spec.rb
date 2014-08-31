@@ -159,16 +159,15 @@ describe RecursiveOpenStruct do
         end
 
         context "changes after map reduction" do
-          let(:elements) { { :elements => [ { :foo => {:bar => 1} }, { :foo => {:bar => 2} }, { :foo => {:bar => 3} } ] } }
+          let(:elements) { { :elements => [ { :foo => {:bar => 1} } ] } }
           subject { RecursiveOpenStruct.new(elements, :recurse_over_arrays => true) }
 
-          it { subject.elements.length.should == 3 }
           it "Retains changes with dotted syntax" do
-            subject.elements.map(&:foo).map(&:bar).inject(0, &:+).should == 1 + 2 + 3
+            subject.elements[0].should be_an_instance_of RecursiveOpenStruct
           end
 
           it "Retains changed with hash syntax" do
-            subject.elements.map { |e| e[:foo] }.map(&:bar).inject(0, &:+).should == 1 + 2 + 3
+            subject[:elements][0].should be_an_instance_of RecursiveOpenStruct
           end
         end
       end # when recursing over arrays is enabled
