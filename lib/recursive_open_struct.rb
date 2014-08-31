@@ -21,7 +21,7 @@ class RecursiveOpenStruct < OpenStruct
     end
   end
 
-  def [] name
+  def [](name)
     send name
   end
 
