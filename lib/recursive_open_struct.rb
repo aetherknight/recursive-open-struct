@@ -5,6 +5,7 @@ class RecursiveOpenStruct < OpenStruct
 
   def initialize(h=nil, args={})
     @recurse_over_arrays = args.fetch(:recurse_over_arrays,false)
+    @arrays = args.fetch(:arrays, false)
     super(h)
     @sub_elements = {}
   end
@@ -31,7 +32,7 @@ class RecursiveOpenStruct < OpenStruct
           v = @table[name]
           if v.is_a?(Hash)
             @sub_elements[name] ||= self.class.new(v, :recurse_over_arrays => @recurse_over_arrays)
-          elsif v.is_a?(Array) and @recurse_over_arrays
+          elsif v.is_a?(Array) and (@recurse_over_arrays || @arrays)
             @sub_elements[name] ||= recurse_over_array v
           else
             v
@@ -55,6 +56,8 @@ class RecursiveOpenStruct < OpenStruct
       end
     end
   end
+
+  alias_method :array, :recurse_over_array
 
   def debug_inspect(io = STDOUT, indent_level = 0, recursion_limit = 12)
     display_recursive_open_struct(io, @table, indent_level, recursion_limit)

@@ -42,6 +42,11 @@ describe RecursiveOpenStruct do
         it { subject.methods.map(&:to_sym).should include :blah= }
         it { subject.methods.map(&:to_sym).should_not include :asdf }
         it { subject.methods.map(&:to_sym).should_not include :asdf= }
+
+        describe 'alias_methods' do
+          it { subject.method(:to_hash).should eq subject.method(:to_h) }
+          it { subject.method(:recurse_over_array).should eq subject.method(:array) }
+        end # describe alias_methods
       end # describe #methods
     end # describe handling of arbitrary attributes
   end # describe behavior it inherits from OpenStruct
@@ -54,7 +59,7 @@ describe RecursiveOpenStruct do
       ros.to_h.should == h
       ros.to_hash.should == h
     end
-  end
+  end # describe improvements on OpenStruct
 
   describe "recursive behavior" do
     let(:h) { { :blah => { :another => 'value' } } }
@@ -116,6 +121,9 @@ describe RecursiveOpenStruct do
 
       context "when recursing over arrays is enabled" do
         subject { RecursiveOpenStruct.new(h, :recurse_over_arrays => true) }
+        let(:arrays) { RecursiveOpenStruct.new(h, :arrays => true) }
+
+        it { subject.blah[0].should eq arrays.blah[0] }
 
         it { subject.blah.length.should == 3 }
         it { subject.blah[0].foo.should == '1' }

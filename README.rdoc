@@ -19,9 +19,10 @@ have to explicitly enable it:
   h = { :somearr => [ { :name => 'a'}, { :name => 'b' } ] }
 
   ros = RecursiveOpenStruct.new(h, :recurse_over_arrays => true )
+  # ros = RecursiveOpenStruct.new(h, :arrays => true )
 
-  ros.somarr[0].name # => 'a'
-  ros.somarr[1].name # => 'b'
+  ros.somearr[0].name # => 'a'
+  ros.somearr[1].name # => 'b'
 
 == Installation
 
@@ -36,7 +37,7 @@ You may also install the gem manually :
   gem install recursive-open-struct
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
