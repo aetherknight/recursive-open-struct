@@ -64,6 +64,10 @@ describe RecursiveOpenStruct do
       subject.blah.another.should == 'value'
     end
 
+    it "handles subscript notation the same way as dotted notation" do
+      subject.blah.another.should == subject[:blah].another
+    end
+
     it "uses #key_as_a_hash to return key as a Hash" do
       subject.blah_as_a_hash.should == { :another => 'value' }
     end
