@@ -96,16 +96,21 @@ describe RecursiveOpenStruct do
 
     context "after a sub-element has been modified" do
       let(:hash) do
-        {
-          :blah => {
-            :blargh => 'Brad'
-          }
-        }
+        { :blah => { :blargh => "Brad" } }
       end
+      let(:updated_hash) do
+        { :blah => { :blargh => "Janet" } }
+      end
+
       subject { RecursiveOpenStruct.new(hash) }
       before(:each) { subject.blah.blargh = "Janet" }
       it "returns a hash that contains those modifications" do
-        subject.to_h.should == { :blah => { :blargh => "Janet" } }
+        subject.to_h.should == updated_hash
+      end
+
+      it "reflects the change at the root node" do
+        table = subject.instance_variable_get(:@table)
+        table.should == updated_hash
       end
     end
 
