@@ -162,6 +162,18 @@ describe RecursiveOpenStruct do
 
         end
 
+        context "changes after map reduction" do
+          let(:elements) { { :elements => [ { :foo => {:bar => 1} } ] } }
+          subject { RecursiveOpenStruct.new(elements, :recurse_over_arrays => true) }
+
+          it "Retains changes with dotted syntax" do
+            subject.elements[0].should be_an_instance_of RecursiveOpenStruct
+          end
+
+          it "Retains changed with hash syntax" do
+            subject[:elements][0].should be_an_instance_of RecursiveOpenStruct
+          end
+        end
       end # when recursing over arrays is enabled
 
       context "when recursing over arrays is disabled" do

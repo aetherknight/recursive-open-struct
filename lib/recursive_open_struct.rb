@@ -21,6 +21,10 @@ class RecursiveOpenStruct < OpenStruct
     end
   end
 
+  def [](name)
+    send name
+  end
+
   alias_method :to_hash, :to_h
 
   def [](name)
