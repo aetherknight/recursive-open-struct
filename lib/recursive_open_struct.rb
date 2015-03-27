@@ -5,11 +5,13 @@ class RecursiveOpenStruct < OpenStruct
 
   def initialize(hash=nil, args={})
     @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
-
+    mutate_input_hash = args.fetch(:mutate_input_hash, false)
+    
+    hash = deep_dup(hash) unless mutate_input_hash
+    
     super(hash)
 
-    if args.fetch(:mutate_input_hash, false) && hash
-      puts ">> mutate = true"
+    if mutate_input_hash && hash
       hash.clear
       @table.each { |k,v| hash[k] = v }
       @table = hash
@@ -101,6 +103,32 @@ class RecursiveOpenStruct < OpenStruct
     end
 
     true
+  end
+
+  private
+  
+  def deep_dup(obj, visited=[])
+    if obj.is_a?(Hash)
+      obj.each_with_object({}) do |(key, value), h|
+        if visited.include?(value.object_id)
+          h[key] = value
+        else
+          visited << value.object_id
+          h[key] = deep_dup(value, visited)
+        end
+      end
+    elsif obj.is_a?(Array)
+      obj.each_with_object([]) do |value, arr|
+        if visited.include?(value.object_id)
+          arr << value
+        else
+          visited << value.object_id
+          arr << deep_dup(value, visited << value.object_id)
+        end
+      end
+    else
+      obj
+    end
   end
 
 end

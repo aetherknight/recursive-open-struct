@@ -141,15 +141,20 @@ describe RecursiveOpenStruct do
           it "Retains changes across Array lookups" do
             subject.blah[1].foo.should == "Dr Scott"
           end
+
           it "propagates the changes through to .to_h across Array lookups" do
             subject.to_h.should == {
               :blah => [ { :foo => '1' }, { :foo => "Dr Scott" }, 'baz' ]
             }
           end
+
           it "changes the internal table" do
-            puts subject.to_s
             updated_ros = RecursiveOpenStruct.new(updated_h)
             subject.to_s.should == updated_ros.to_s
+          end
+
+          it "does not mutate the input hash passed to the constructor" do
+            h[:blah][1][:foo].should == '2'
           end
         end
 
