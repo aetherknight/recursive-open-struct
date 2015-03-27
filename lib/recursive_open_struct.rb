@@ -110,26 +110,20 @@ class RecursiveOpenStruct < OpenStruct
   def deep_dup(obj, visited=[])
     if obj.is_a?(Hash)
       obj.each_with_object({}) do |(key, value), h|
-        if visited.include?(value.object_id)
-          h[key] = value
-        else
-          visited << value.object_id
-          h[key] = deep_dup(value, visited)
-        end
+        h[key] = value_or_deep_dup(value, visited)
       end
     elsif obj.is_a?(Array)
       obj.each_with_object([]) do |value, arr|
-        if visited.include?(value.object_id)
-          arr << value
-        else
-          visited << value.object_id
-          arr << deep_dup(value, visited << value.object_id)
-        end
+        arr << value_or_deep_dup(value, visited)
       end
     else
       obj
     end
   end
 
+  def value_or_deep_dup(value, visited)
+    obj_id = value.object_id
+    visited.include?(obj_id) ? value : deep_dup(value, visited << obj_id)
+  end
 end
 
