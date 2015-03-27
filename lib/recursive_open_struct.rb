@@ -58,7 +58,7 @@ class RecursiveOpenStruct < OpenStruct
   def recurse_over_array array
     array.map do |a|
       if a.is_a? Hash
-        self.class.new(a, :recurse_over_arrays => true)
+        self.class.new(a, :recurse_over_arrays => true, :mutate_input_hash => true)
       elsif a.is_a? Array
         recurse_over_array a
       else
