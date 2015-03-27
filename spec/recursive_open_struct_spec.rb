@@ -112,6 +112,10 @@ describe RecursiveOpenStruct do
         updated_ros = RecursiveOpenStruct.new(updated_hash)
         subject.to_s.should == updated_ros.to_s
       end
+
+      it "does not mutate the input hash passed to the constructor" do
+        hash[:blah][:blargh].should == 'Brad'    
+      end
     end
 
 

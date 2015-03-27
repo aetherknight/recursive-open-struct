@@ -8,7 +8,8 @@ class RecursiveOpenStruct < OpenStruct
 
     super(hash)
 
-    if args.fetch(:mutate_input_hash, false)
+    if args.fetch(:mutate_input_hash, false) && hash
+      puts ">> mutate = true"
       hash.clear
       @table.each { |k,v| hash[k] = v }
       @table = hash
