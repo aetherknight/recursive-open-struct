@@ -108,9 +108,9 @@ describe RecursiveOpenStruct do
         subject.to_h.should == updated_hash
       end
 
-      it "reflects the change at the root node" do
-        table = subject.instance_variable_get(:@table)
-        table.should == updated_hash
+      it "changes the internal table" do
+        updated_ros = RecursiveOpenStruct.new(updated_hash)
+        subject.to_s.should == updated_ros.to_s
       end
     end
 
