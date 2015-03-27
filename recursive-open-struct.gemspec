@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
 
-  s.add_development_dependency(%q<rspec>, [">= 0"])
+  s.add_development_dependency('rspec', "~> 3.2")
   s.add_development_dependency(%q<bundler>, [">= 0"])
   s.add_development_dependency(%q<rdoc>, [">= 0"])
   s.add_development_dependency(%q<rake>, [">= 0"])
