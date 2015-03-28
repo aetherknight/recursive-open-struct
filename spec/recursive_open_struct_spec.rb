@@ -110,8 +110,16 @@ describe RecursiveOpenStruct do
 
       before(:each) { subject.blah.blargh = "Janet" }
 
-      it "returns a hash tree that contains those modifications" do
-        subject.to_h.should == updated_hash
+      describe ".to_h" do
+        it "returns a hash tree that contains those modifications" do
+          subject.to_h.should == updated_hash
+        end
+
+        specify "modifying the returned hash tree does not modify the ROS" do
+          subject.to_h[:blah][:blargh] = "Dr Scott"
+
+          subject.blah.blargh.should == "Janet"
+        end
       end
 
       it "does not mutate the original hash tree passed to the constructor" do
@@ -168,6 +176,12 @@ describe RecursiveOpenStruct do
             subject.to_h.should == {
               :blah => [ { :foo => '1' }, { :foo => "Dr Scott" }, 'baz' ]
             }
+          end
+
+          it "deep-copies hashes within Arrays" do
+            subject.to_h[:blah][1][:foo] = "Rocky"
+
+            subject.blah[1].foo.should == "Dr Scott"
           end
 
           it "does not mutate the input hash passed to the constructor" do

@@ -35,15 +35,7 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def to_h
-    @table.dup.update(@sub_elements) do |k, oldval, newval|
-      if newval.kind_of?(self.class)
-        newval.to_h
-      elsif newval.kind_of?(Array)
-        newval.map { |a| a.kind_of?(self.class) ? a.to_h : a }
-      else
-        raise "Cached value of unsupported type: #{newval.inspect}"
-      end
-    end
+    DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(@table)
   end
 
   alias_method :to_hash, :to_h
