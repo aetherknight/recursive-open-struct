@@ -116,7 +116,7 @@ class RecursiveOpenStruct < OpenStruct
       obj.each_with_object({}) do |(key, value), h|
         h[key] = value_or_deep_dup(value, visited)
       end
-    elsif obj.is_a?(Array)
+    elsif obj.is_a?(Array) && @recurse_over_arrays
       obj.each_with_object([]) do |value, arr|
         arr << value_or_deep_dup(value, visited)
       end

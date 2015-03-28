@@ -100,26 +100,28 @@ describe RecursiveOpenStruct do
 
     context "after a sub-element has been modified" do
       let(:hash) do
-        { :blah => { :blargh => "Brad" } }
+        { :blah => { :blargh => "Brad" }, :some_array => [ 1, 2, 3] }
       end
       let(:updated_hash) do
-        { :blah => { :blargh => "Janet" } }
+        { :blah => { :blargh => "Janet" }, :some_array => [ 1, 2, 3] }
       end
 
       subject { RecursiveOpenStruct.new(hash) }
 
       before(:each) { subject.blah.blargh = "Janet" }
-      it "returns a hash that contains those modifications" do
+
+      it "returns a hash tree that contains those modifications" do
         subject.to_h.should == updated_hash
       end
 
-      it "changes the internal table" do
-        updated_ros = RecursiveOpenStruct.new(updated_hash)
-        subject.to_s.should == updated_ros.to_s
+      it "does not mutate the input hash tree passed to the constructor" do
+        hash[:blah][:blargh].should == 'Brad'
       end
 
-      it "does not mutate the input hash passed to the constructor" do
-        hash[:blah][:blargh].should == 'Brad'    
+      it "limits the deep-copy to the initial hash tree" do
+        subject.some_array[0] = 4
+
+        hash[:some_array][0].should == 4
       end
     end
 
@@ -152,12 +154,11 @@ describe RecursiveOpenStruct do
             }
           end
 
-          it "changes the internal table" do
-            updated_ros = RecursiveOpenStruct.new(updated_h)
-            subject.to_s.should == updated_ros.to_s
+          it "does not mutate the input hash passed to the constructor" do
+            h[:blah][1][:foo].should == '2'
           end
 
-          it "does not mutate the input hash passed to the constructor" do
+          it "the deep copy recurses over Arrays as well" do
             h[:blah][1][:foo].should == '2'
           end
         end
