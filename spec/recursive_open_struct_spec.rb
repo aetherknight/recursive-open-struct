@@ -107,6 +107,7 @@ describe RecursiveOpenStruct do
       end
 
       subject { RecursiveOpenStruct.new(hash) }
+
       before(:each) { subject.blah.blargh = "Janet" }
       it "returns a hash that contains those modifications" do
         subject.to_h.should == updated_hash
@@ -121,7 +122,6 @@ describe RecursiveOpenStruct do
         hash[:blah][:blargh].should == 'Brad'    
       end
     end
-
 
     describe 'recursing over arrays' do
       let(:blah_list) { [ { :foo => '1' }, { :foo => '2' }, 'baz' ] }
