@@ -1,4 +1,4 @@
-= recursive-open-struct
+# recursive-open-struct
 
 OpenStruct subclass that returns nested hash attributes as
 RecursiveOpenStructs.
@@ -23,7 +23,7 @@ have to explicitly enable it:
   ros.somarr[0].name # => 'a'
   ros.somarr[1].name # => 'b'
 
-== Installation
+## Installation
 
 Available as a gem in rubygems, the default gem repository.
 
@@ -35,16 +35,14 @@ You may also install the gem manually :
 
   gem install recursive-open-struct
 
-== Note on Patches/Pull Requests
+## Contributing
  
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Add tests for your new or changed functionality. Make sure the tests you add
+  provide clean and clear explanation of the feature.
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+## Copyright
 
 Copyright (c) 2009-2015 William (B.J.) Snow Orvis. See LICENSE for details.

@@ -29,8 +29,9 @@ Gem::Specification.new do |s|
   s.test_files = `git ls-files spec`.split("\n")
   s.require_paths = ["lib"]
   s.extra_rdoc_files = [
+    "CHANGELOG.md",
     "LICENSE.txt",
-    "README.rdoc"
+    "README.md"
   ]
 
   s.add_development_dependency('rspec', "~> 3.2")
