@@ -1,3 +1,12 @@
+0.6.1 / 2015-03-28
+==================
+
+* FIX: Actually ensure that the internal @table is properly dependent or
+  independent of the input hash tree. I mistakenly refactored away an important
+  piece of code that fervic added.
+* FIX: Actually ensure that `#dup` works.
+* Also refactored how `#to_h` is implemented to use newer plumbing.
+
 0.6.0 / 2015-03-28
 ==================
 
