@@ -100,16 +100,25 @@ describe RecursiveOpenStruct do
 
     context "after a sub-element has been modified" do
       let(:hash) do
-        {
-          :blah => {
-            :blargh => 'Brad'
-          }
-        }
+        { :blah => { :blargh => "Brad" } }
       end
+      let(:updated_hash) do
+        { :blah => { :blargh => "Janet" } }
+      end
+
       subject { RecursiveOpenStruct.new(hash) }
       before(:each) { subject.blah.blargh = "Janet" }
       it "returns a hash that contains those modifications" do
-        subject.to_h.should == { :blah => { :blargh => "Janet" } }
+        subject.to_h.should == updated_hash
+      end
+
+      it "changes the internal table" do
+        updated_ros = RecursiveOpenStruct.new(updated_hash)
+        subject.to_s.should == updated_ros.to_s
+      end
+
+      it "does not mutate the input hash passed to the constructor" do
+        hash[:blah][:blargh].should == 'Brad'    
       end
     end
 
@@ -126,15 +135,31 @@ describe RecursiveOpenStruct do
         it { subject.blah[1].foo.should == '2' }
         it { subject.blah_as_a_hash.should == blah_list }
         it { subject.blah[2].should == 'baz' }
-        it "Retains changes across Array lookups" do
-          subject.blah[1].foo = "Dr Scott"
-          subject.blah[1].foo.should == "Dr Scott"
-        end
-        it "propagates the changes through to .to_h across Array lookups" do
-          subject.blah[1].foo = "Dr Scott"
-          subject.to_h.should == {
-            :blah => [ { :foo => '1' }, { :foo => "Dr Scott" }, 'baz' ]
-          }
+
+        context "when an inner value changes" do
+          let(:updated_blah_list) { [ { :foo => '1' }, { :foo => 'Dr Scott' }, 'baz' ] }
+          let(:updated_h) { { :blah => updated_blah_list } }
+
+          before(:each) { subject.blah[1].foo = "Dr Scott" }
+
+          it "Retains changes across Array lookups" do
+            subject.blah[1].foo.should == "Dr Scott"
+          end
+
+          it "propagates the changes through to .to_h across Array lookups" do
+            subject.to_h.should == {
+              :blah => [ { :foo => '1' }, { :foo => "Dr Scott" }, 'baz' ]
+            }
+          end
+
+          it "changes the internal table" do
+            updated_ros = RecursiveOpenStruct.new(updated_h)
+            subject.to_s.should == updated_ros.to_s
+          end
+
+          it "does not mutate the input hash passed to the constructor" do
+            h[:blah][1][:foo].should == '2'
+          end
         end
 
         context "when array is nested deeper" do

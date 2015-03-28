@@ -3,9 +3,20 @@ require 'ostruct'
 class RecursiveOpenStruct < OpenStruct
   VERSION = "0.5.0"
 
-  def initialize(h=nil, args={})
-    @recurse_over_arrays = args.fetch(:recurse_over_arrays,false)
-    super(h)
+  def initialize(hash=nil, args={})
+    @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
+    mutate_input_hash = args.fetch(:mutate_input_hash, false)
+    
+    hash = deep_dup(hash) unless mutate_input_hash
+    
+    super(hash)
+
+    if mutate_input_hash && hash
+      hash.clear
+      @table.each { |k,v| hash[k] = v }
+      @table = hash
+    end
+
     @sub_elements = {}
   end
 
@@ -34,7 +45,9 @@ class RecursiveOpenStruct < OpenStruct
         define_method(name) do
           v = @table[name]
           if v.is_a?(Hash)
-            @sub_elements[name] ||= self.class.new(v, :recurse_over_arrays => @recurse_over_arrays)
+            @sub_elements[name] ||= self.class.new(v,
+                                      :recurse_over_arrays => @recurse_over_arrays,
+                                      :mutate_input_hash => true)
           elsif v.is_a?(Array) and @recurse_over_arrays
             @sub_elements[name] ||= recurse_over_array v
           else
@@ -51,7 +64,7 @@ class RecursiveOpenStruct < OpenStruct
   def recurse_over_array array
     array.map do |a|
       if a.is_a? Hash
-        self.class.new(a, :recurse_over_arrays => true)
+        self.class.new(a, :recurse_over_arrays => true, :mutate_input_hash => true)
       elsif a.is_a? Array
         recurse_over_array a
       else
@@ -96,4 +109,25 @@ class RecursiveOpenStruct < OpenStruct
     true
   end
 
+  private
+  
+  def deep_dup(obj, visited=[])
+    if obj.is_a?(Hash)
+      obj.each_with_object({}) do |(key, value), h|
+        h[key] = value_or_deep_dup(value, visited)
+      end
+    elsif obj.is_a?(Array)
+      obj.each_with_object([]) do |value, arr|
+        arr << value_or_deep_dup(value, visited)
+      end
+    else
+      obj
+    end
+  end
+
+  def value_or_deep_dup(value, visited)
+    obj_id = value.object_id
+    visited.include?(obj_id) ? value : deep_dup(value, visited << obj_id)
+  end
 end
+
