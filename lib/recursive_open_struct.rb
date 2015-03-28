@@ -2,6 +2,7 @@ require 'ostruct'
 require 'recursive_open_struct/version'
 
 require 'recursive_open_struct/debug_inspect'
+require 'recursive_open_struct/deep_dup'
 
 class RecursiveOpenStruct < OpenStruct
   include DebugInspect
@@ -10,15 +11,11 @@ class RecursiveOpenStruct < OpenStruct
     @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
     mutate_input_hash = args.fetch(:mutate_input_hash, false)
 
-    hash = deep_dup(hash) unless mutate_input_hash
+    unless mutate_input_hash
+      hash = DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(hash)
+    end
 
     super(hash)
-
-    if mutate_input_hash && hash
-      hash.clear
-      @table.each { |k,v| hash[k] = v }
-      @table = hash
-    end
 
     @sub_elements = {}
   end
@@ -74,27 +71,6 @@ class RecursiveOpenStruct < OpenStruct
         a
       end
     end
-  end
-
-  private
-
-  def deep_dup(obj, visited=[])
-    if obj.is_a?(Hash)
-      obj.each_with_object({}) do |(key, value), h|
-        h[key] = value_or_deep_dup(value, visited)
-      end
-    elsif obj.is_a?(Array) && @recurse_over_arrays
-      obj.each_with_object([]) do |value, arr|
-        arr << value_or_deep_dup(value, visited)
-      end
-    else
-      obj
-    end
-  end
-
-  def value_or_deep_dup(value, visited)
-    obj_id = value.object_id
-    visited.include?(obj_id) ? value : deep_dup(value, visited << obj_id)
   end
 end
 
