@@ -1,7 +1,7 @@
 require 'ostruct'
+require 'recursive_open_struct/version'
 
 class RecursiveOpenStruct < OpenStruct
-  VERSION = "0.5.0"
 
   def initialize(hash=nil, args={})
     @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)

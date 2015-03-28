@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-require './lib/recursive_open_struct'
+require './lib/recursive_open_struct/version'
 
 Gem::Specification.new do |s|
   s.name = "recursive-open-struct"
