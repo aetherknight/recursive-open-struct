@@ -49,7 +49,7 @@ class RecursiveOpenStruct < OpenStruct
                                       :recurse_over_arrays => @recurse_over_arrays,
                                       :mutate_input_hash => true)
           elsif v.is_a?(Array) and @recurse_over_arrays
-            @sub_elements[name] ||= recurse_over_array v
+            @sub_elements[name] ||= recurse_over_array(v)
           else
             v
           end
@@ -61,7 +61,8 @@ class RecursiveOpenStruct < OpenStruct
     name
   end
 
-  def recurse_over_array array
+  # TODO: Make me private if/when we do an API-breaking change release
+  def recurse_over_array(array)
     array.map do |a|
       if a.is_a? Hash
         self.class.new(a, :recurse_over_arrays => true, :mutate_input_hash => true)
