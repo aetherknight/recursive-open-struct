@@ -114,7 +114,7 @@ describe RecursiveOpenStruct do
         subject.to_h.should == updated_hash
       end
 
-      it "does not mutate the input hash tree passed to the constructor" do
+      it "does not mutate the original hash tree passed to the constructor" do
         hash[:blah][:blargh].should == 'Brad'
       end
 
@@ -122,6 +122,22 @@ describe RecursiveOpenStruct do
         subject.some_array[0] = 4
 
         hash[:some_array][0].should == 4
+      end
+
+      describe "#dup" do
+        let(:duped_subject) { subject.dup }
+
+        it "preserves sub-element modifications" do
+          duped_subject.blah.blargh.should == subject.blah.blargh
+        end
+
+        it "allows the copy's sub-elements to be modified independently from the original's" do
+          subject.blah.blargh.should == "Janet"
+          duped_subject.blah.blargh = "Dr. Scott"
+
+          duped_subject.blah.blargh.should == "Dr. Scott"
+          subject.blah.blargh.should == "Janet"
+        end
       end
     end
 
@@ -160,6 +176,21 @@ describe RecursiveOpenStruct do
 
           it "the deep copy recurses over Arrays as well" do
             h[:blah][1][:foo].should == '2'
+          end
+
+          describe "#dup" do
+            let(:duped_subject) { subject.dup }
+
+            it "preserves sub-element modifications" do
+              duped_subject.blah[1].foo.should == subject.blah[1].foo
+            end
+
+            it "allows the copy's sub-elements to be modified independently from the original's" do
+              duped_subject.blah[1].foo = "Rocky"
+
+              duped_subject.blah[1].foo.should == "Rocky"
+              subject.blah[1].foo.should == "Dr Scott"
+            end
           end
         end
 

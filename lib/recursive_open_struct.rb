@@ -17,6 +17,20 @@ class RecursiveOpenStruct < OpenStruct
 
     super(hash)
 
+    if mutate_input_hash && hash
+      hash.clear
+      @table.each { |k,v| hash[k] = v }
+      @table = hash
+    end
+
+    @sub_elements = {}
+  end
+
+  def initialize_copy(orig)
+    super
+    # deep copy the table to separate the two objects
+    @table = DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(orig.instance_variable_get(:@table))
+    # Forget any memoized sub-elements
     @sub_elements = {}
   end
 
