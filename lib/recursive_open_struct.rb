@@ -7,23 +7,12 @@ require 'recursive_open_struct/deep_dup'
 class RecursiveOpenStruct < OpenStruct
   include DebugInspect
 
-  def initialize(hash=nil, args={})
+  def initialize(hash={}, args={})
     @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
-    mutate_input_hash = args.fetch(:mutate_input_hash, false)
-
     @deep_dup = DeepDup.new(recurse_over_arrays: @recurse_over_arrays)
 
-    unless mutate_input_hash
-      hash = @deep_dup.call(hash)
-    end
-
-    super(hash)
-
-    if mutate_input_hash && hash
-      hash.clear
-      @table.each { |k,v| hash[k] = v }
-      @table = hash
-    end
+    @table = args.fetch(:mutate_input_hash, false) ? hash : @deep_dup.call(hash)
+    @table && @table.each_key { |k| new_ostruct_member(k.to_sym) }
 
     @sub_elements = {}
   end
