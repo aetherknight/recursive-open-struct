@@ -11,8 +11,10 @@ class RecursiveOpenStruct < OpenStruct
     @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
     mutate_input_hash = args.fetch(:mutate_input_hash, false)
 
+    @deep_dup = DeepDup.new(recurse_over_arrays: @recurse_over_arrays)
+
     unless mutate_input_hash
-      hash = DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(hash)
+      hash = @deep_dup.call(hash)
     end
 
     super(hash)
@@ -29,13 +31,13 @@ class RecursiveOpenStruct < OpenStruct
   def initialize_copy(orig)
     super
     # deep copy the table to separate the two objects
-    @table = DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(orig.instance_variable_get(:@table))
+    @table = @deep_dup.call(orig.instance_variable_get(:@table))
     # Forget any memoized sub-elements
     @sub_elements = {}
   end
 
   def to_h
-    DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(@table)
+    @deep_dup.call(@table)
   end
 
   alias_method :to_hash, :to_h
