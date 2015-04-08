@@ -56,7 +56,10 @@ class RecursiveOpenStruct < OpenStruct
             v
           end
         end
-        define_method("#{name}=") { |x| modifiable[name] = x }
+        define_method("#{name}=") do |x|
+          @sub_elements.delete(name)
+          modifiable[name] = x
+        end
         define_method("#{name}_as_a_hash") { @table[name] }
       end
     end

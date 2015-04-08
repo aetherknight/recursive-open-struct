@@ -149,6 +149,40 @@ describe RecursiveOpenStruct do
       end
     end
 
+    context "when memoizing and then modifying entire recursive structures" do
+      subject do
+        RecursiveOpenStruct.new(
+          { :blah => original_blah }, :recurse_over_arrays => true)
+      end
+ 
+      before(:each) { subject.blah } # enforce memoization
+
+      context "when modifying an entire Hash" do
+        let(:original_blah) { { :a => 'A', :b => 'B' } }
+        let(:new_blah) { { :something_new => "C" } }
+
+        before(:each) { subject.blah = new_blah }
+
+        it "returns the modified value instead of the memoized one" do
+          subject.blah.something_new.should == "C"
+        end
+
+        specify "the old value no longer exists" do
+          subject.blah.a.should be_nil
+        end
+      end
+
+      context "when modifying an entire Array" do
+        let(:original_blah) { [1, 2, 3] }
+
+        it "returns the modified value instead of the memoized one" do
+          new_blah = [4, 5, 6]
+          subject.blah = new_blah
+          subject.blah.should == new_blah
+        end
+      end
+    end
+
     describe 'recursing over arrays' do
       let(:blah_list) { [ { :foo => '1' }, { :foo => '2' }, 'baz' ] }
       let(:h) { { :blah => blah_list } }
