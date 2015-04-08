@@ -28,8 +28,14 @@ class RecursiveOpenStruct < OpenStruct
 
   def initialize_copy(orig)
     super
+
+    # Apply fix if necessary:
+    #   https://github.com/ruby/ruby/commit/2d952c6d16ffe06a28bb1007e2cd1410c3db2d58
+    @table.each_key{|key| new_ostruct_member(key)} if RUBY_VERSION =~ /^1.9/ 
+
     # deep copy the table to separate the two objects
     @table = DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(orig.instance_variable_get(:@table))
+
     # Forget any memoized sub-elements
     @sub_elements = {}
   end
