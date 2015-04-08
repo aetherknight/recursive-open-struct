@@ -1,3 +1,11 @@
+0.6.2 / 2015-04-07
+==================
+
+* FIX: fervic: Address a bug in the Ruby 1.9's version of OpenStruct's `dup`
+* FIX: Victor Guzman: Reset memoized values on assignment in order to force the
+  implementation to re-memoize them.
+* MAINT: fervic: Simplified `initialize`
+
 0.6.1 / 2015-03-28
 ==================
 
