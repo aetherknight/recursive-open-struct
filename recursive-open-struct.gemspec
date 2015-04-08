@@ -34,9 +34,11 @@ Gem::Specification.new do |s|
     "README.md"
   ]
 
+  s.add_development_dependency('bundler', [">= 0"])
+  s.add_development_dependency('pry', [">= 0"])
+  s.add_development_dependency('rake', [">= 0"])
+  s.add_development_dependency('rdoc', [">= 0"])
   s.add_development_dependency('rspec', "~> 3.2")
-  s.add_development_dependency(%q<bundler>, [">= 0"])
-  s.add_development_dependency(%q<rdoc>, [">= 0"])
-  s.add_development_dependency(%q<rake>, [">= 0"])
+  s.add_development_dependency('simplecov', [">= 0"])
 end
 
