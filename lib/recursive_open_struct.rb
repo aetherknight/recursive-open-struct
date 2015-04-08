@@ -7,21 +7,12 @@ require 'recursive_open_struct/deep_dup'
 class RecursiveOpenStruct < OpenStruct
   include DebugInspect
 
-  def initialize(hash=nil, args={})
+  def initialize(hash={}, args={})
     @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
-    mutate_input_hash = args.fetch(:mutate_input_hash, false)
+    @deep_dup = DeepDup.new(recurse_over_arrays: @recurse_over_arrays)
 
-    unless mutate_input_hash
-      hash = DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(hash)
-    end
-
-    super(hash)
-
-    if mutate_input_hash && hash
-      hash.clear
-      @table.each { |k,v| hash[k] = v }
-      @table = hash
-    end
+    @table = args.fetch(:mutate_input_hash, false) ? hash : @deep_dup.call(hash)
+    @table && @table.each_key { |k| new_ostruct_member(k.to_sym) }
 
     @sub_elements = {}
   end
@@ -34,14 +25,13 @@ class RecursiveOpenStruct < OpenStruct
     @table.each_key{|key| new_ostruct_member(key)} if RUBY_VERSION =~ /^1.9/ 
 
     # deep copy the table to separate the two objects
-    @table = DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(orig.instance_variable_get(:@table))
-
+    @table = @deep_dup.call(orig.instance_variable_get(:@table))
     # Forget any memoized sub-elements
     @sub_elements = {}
   end
 
   def to_h
-    DeepDup.new(recurse_over_arrays: @recurse_over_arrays).call(@table)
+    @deep_dup.call(@table)
   end
 
   alias_method :to_hash, :to_h
