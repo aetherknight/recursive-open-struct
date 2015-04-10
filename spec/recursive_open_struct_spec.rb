@@ -11,10 +11,18 @@ describe RecursiveOpenStruct do
       ros.blah.should == "John Smith"
     end
 
-    it "can be created from a hash" do
-      h = { :asdf => 'John Smith' }
-      ros = RecursiveOpenStruct.new(h)
-      ros.asdf.should == "John Smith"
+    context "can be created from a hash" do
+      it "and keys instanced as sym" do
+        h = { :asdf => 'John Smith' }
+        ros = RecursiveOpenStruct.new(h)
+        ros.asdf.should == "John Smith"
+      end
+
+      it "and keys instanced as string" do
+        h = { "asdf" => 'John Smith' }
+        ros = RecursiveOpenStruct.new(h)
+        ros.asdf.should == "John Smith"
+      end
     end
 
     it "can modify an existing key" do
@@ -154,7 +162,7 @@ describe RecursiveOpenStruct do
         RecursiveOpenStruct.new(
           { :blah => original_blah }, :recurse_over_arrays => true)
       end
- 
+
       before(:each) { subject.blah } # enforce memoization
 
       context "when modifying an entire Hash" do
