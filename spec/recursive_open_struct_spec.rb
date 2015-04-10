@@ -12,13 +12,13 @@ describe RecursiveOpenStruct do
     end
 
     context "can be created from a hash" do
-      it "and keys instanced as sym" do
+      it "and keys are instanced as symbol" do
         h = { :asdf => 'John Smith' }
         ros = RecursiveOpenStruct.new(h)
         ros.asdf.should == "John Smith"
       end
 
-      it "and keys instanced as string" do
+      it "and keys are instanced as string" do
         h = { "asdf" => 'John Smith' }
         ros = RecursiveOpenStruct.new(h)
         ros.asdf.should == "John Smith"
