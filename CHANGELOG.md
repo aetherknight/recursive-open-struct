@@ -1,3 +1,9 @@
+0.6.3 / 2015-04-11
+==================
+
+* FIX: Thiago Guimaraes: Restore being able to create an ROS from a hash that
+  contains strings for keys instead of symbols for keys.
+
 0.6.2 / 2015-04-07
 ==================
 
