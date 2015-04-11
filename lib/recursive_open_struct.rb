@@ -12,7 +12,7 @@ class RecursiveOpenStruct < OpenStruct
     @deep_dup = DeepDup.new(recurse_over_arrays: @recurse_over_arrays)
 
     @table = args.fetch(:mutate_input_hash, false) ? hash : @deep_dup.call(hash)
-    @table && @table.each_key { |k| new_ostruct_member(k.to_sym) }
+    @table && @table.each_key { |k| new_ostruct_member(k) }
 
     @sub_elements = {}
   end
@@ -22,7 +22,7 @@ class RecursiveOpenStruct < OpenStruct
 
     # Apply fix if necessary:
     #   https://github.com/ruby/ruby/commit/2d952c6d16ffe06a28bb1007e2cd1410c3db2d58
-    @table.each_key{|key| new_ostruct_member(key)} if RUBY_VERSION =~ /^1.9/ 
+    @table.each_key{|key| new_ostruct_member(key)} if RUBY_VERSION =~ /^1.9/
 
     # deep copy the table to separate the two objects
     @table = @deep_dup.call(orig.instance_variable_get(:@table))
@@ -41,7 +41,6 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def new_ostruct_member(name)
-    name = name.to_sym
     unless self.respond_to?(name)
       class << self; self; end.class_eval do
         define_method(name) do
