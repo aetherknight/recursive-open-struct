@@ -2,58 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require 'recursive_open_struct'
 
 describe RecursiveOpenStruct do
-
-  describe "behavior it inherits from OpenStruct" do
-
-    it "can represent arbitrary data objects" do
-      ros = RecursiveOpenStruct.new
-      ros.blah = "John Smith"
-      ros.blah.should == "John Smith"
-    end
-
-    context "can be created from a hash" do
-      it "and keys are instanced as symbol" do
-        h = { :asdf => 'John Smith' }
-        ros = RecursiveOpenStruct.new(h)
-        ros.asdf.should == "John Smith"
-      end
-
-      it "and keys are instanced as string" do
-        h = { "asdf" => 'John Smith' }
-        ros = RecursiveOpenStruct.new(h)
-        ros.asdf.should == "John Smith"
-      end
-    end
-
-    it "can modify an existing key" do
-      h = { :blah => 'John Smith' }
-      ros = RecursiveOpenStruct.new(h)
-      ros.blah = "George Washington"
-      ros.blah.should == "George Washington"
-    end
-
-    describe "handling of arbitrary attributes" do
-      subject { RecursiveOpenStruct.new }
-      before(:each) do
-        subject.blah = "John Smith"
-      end
-
-      describe "#respond?" do
-        it { subject.should respond_to :blah }
-        it { subject.should respond_to :blah= }
-        it { subject.should_not respond_to :asdf }
-        it { subject.should_not respond_to :asdf= }
-      end # describe #respond?
-
-      describe "#methods" do
-        it { subject.methods.map(&:to_sym).should include :blah }
-        it { subject.methods.map(&:to_sym).should include :blah= }
-        it { subject.methods.map(&:to_sym).should_not include :asdf }
-        it { subject.methods.map(&:to_sym).should_not include :asdf= }
-      end # describe #methods
-    end # describe handling of arbitrary attributes
-  end # describe behavior it inherits from OpenStruct
-
   describe "improvements on OpenStruct" do
     it "can be converted back to a hash" do
       blank_obj = Object.new
