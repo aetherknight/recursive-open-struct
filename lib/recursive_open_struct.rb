@@ -41,28 +41,29 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def new_ostruct_member(name)
+    key_name = _get_key_from_table_ name
     unless self.respond_to?(name)
       class << self; self; end.class_eval do
         define_method(name) do
-          v = @table[name]
+          v = @table[key_name]
           if v.is_a?(Hash)
-            @sub_elements[name] ||= self.class.new(v,
+            @sub_elements[key_name] ||= self.class.new(v,
                                       :recurse_over_arrays => @recurse_over_arrays,
                                       :mutate_input_hash => true)
           elsif v.is_a?(Array) and @recurse_over_arrays
-            @sub_elements[name] ||= recurse_over_array(v)
+            @sub_elements[key_name] ||= recurse_over_array(v)
           else
             v
           end
         end
         define_method("#{name}=") do |x|
-          @sub_elements.delete(name)
-          modifiable[name] = x
+          @sub_elements.delete(key_name)
+          modifiable[key_name] = x
         end
-        define_method("#{name}_as_a_hash") { @table[name] }
+        define_method("#{name}_as_a_hash") { @table[key_name] }
       end
     end
-    name
+    key_name
   end
 
   # TODO: Make me private if/when we do an API-breaking change release
@@ -77,5 +78,14 @@ class RecursiveOpenStruct < OpenStruct
       end
     end
   end
+
+  private
+
+  def _get_key_from_table_(name)
+    return name.to_s if @table.has_key?(name.to_s)
+    return name.to_sym if @table.has_key?(name.to_sym)
+    name
+  end
+
 end
 
