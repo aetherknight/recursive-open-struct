@@ -40,6 +40,10 @@ class RecursiveOpenStruct < OpenStruct
     send name
   end
 
+  def []=(name, value)
+    modifiable[new_ostruct_member(name)] = value
+  end if RUBY_VERSION =~ /^1.9/
+
   def new_ostruct_member(name)
     key_name = _get_key_from_table_ name
     unless self.respond_to?(name)
@@ -78,6 +82,27 @@ class RecursiveOpenStruct < OpenStruct
       end
     end
   end
+
+  def delete_field(name)
+    sym = _get_key_from_table_(name)
+    singleton_class.__send__(:remove_method, sym, "#{sym}=")
+    @sub_elements.delete sym
+    @table.delete sym
+  end
+
+  def eql?(other)
+    return false unless other.kind_of?(OpenStruct)
+    @table.eql?(other.table)
+  end if RUBY_VERSION =~ /^1.9/
+
+  def hash
+    @table.hash
+  end if RUBY_VERSION =~ /^1.9/
+
+  def each_pair
+    return to_enum(:each_pair) { @table.size } unless block_given?
+    @table.each_pair{|p| yield p}
+  end if RUBY_VERSION =~ /^1.9/
 
   private
 
