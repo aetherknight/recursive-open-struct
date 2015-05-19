@@ -27,7 +27,6 @@ describe RecursiveOpenStruct do
 
       it "removes the value" do
         expect(ros.foo).to be_nil
-        is_expected
         expect(ros.to_h).to_not include(:foo)
       end
 
@@ -92,6 +91,7 @@ describe RecursiveOpenStruct do
       it "calculates table hash" do
         expect(ros.hash).to be ros.instance_variable_get('@table').hash
       end
+
     end
 
     context "each_pair" do
