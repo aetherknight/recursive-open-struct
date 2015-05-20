@@ -236,6 +236,49 @@ describe RecursiveOpenStruct do
         it { expect(subject.blah[0][:foo]).to eq '1' }
       end # when recursing over arrays is disabled
 
+      describe 'modifying an array and recursing over it' do
+        let(:h) { {} }
+        subject { RecursiveOpenStruct.new(h, recurse_over_arrays: true) }
+
+        context 'when adding an array with hashes into the tree' do
+          before(:each) do
+            subject.mystery = {}
+            subject.mystery.science = [{ theatre: 9000 }]
+          end
+
+          it "ROS's it" do
+            expect(subject.mystery.science[0].theatre).to eq 9000
+          end
+        end
+
+        context 'when appending a hash to an array' do
+          before(:each) do
+            subject.mystery = {}
+            subject.mystery.science = []
+            subject.mystery.science << { theatre: 9000 }
+          end
+
+          it "ROS's it" do
+            expect(subject.mystery.science[0].theatre).to eq 9000
+          end
+        end
+
+        context 'after appending a hash to an array' do
+          before(:each) do
+            subject.mystery = {}
+            subject.mystery.science = []
+            subject.mystery.science[0] = {}
+          end
+
+          it "can have new values be set" do
+            expect do
+              subject.mystery.science[0].theatre = 9000
+            end.to_not raise_error
+
+            expect(subject.mystery.science[0].theatre).to eq 9000
+          end
+        end
+      end # modifying an array and then recursing
     end # recursing over arrays
   end # recursive behavior
 end

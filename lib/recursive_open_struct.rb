@@ -50,6 +50,7 @@ class RecursiveOpenStruct < OpenStruct
                                       :mutate_input_hash => true)
           elsif v.is_a?(Array) and @recurse_over_arrays
             @sub_elements[key_name] ||= recurse_over_array(v)
+            @sub_elements[key_name] = recurse_over_array(@sub_elements[key_name])
           else
             v
           end
@@ -91,6 +92,4 @@ class RecursiveOpenStruct < OpenStruct
     return name.to_sym if @table.has_key?(name.to_sym)
     name
   end
-
 end
-
