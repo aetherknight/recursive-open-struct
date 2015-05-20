@@ -40,29 +40,34 @@ class RecursiveOpenStruct < OpenStruct
     send name
   end
 
+  def []=(name, value)
+    modifiable[new_ostruct_member(name)] = value
+  end if RUBY_VERSION =~ /^1.9/
+
   def new_ostruct_member(name)
+    key_name = _get_key_from_table_ name
     unless self.respond_to?(name)
       class << self; self; end.class_eval do
         define_method(name) do
-          v = @table[name]
+          v = @table[key_name]
           if v.is_a?(Hash)
-            @sub_elements[name] ||= self.class.new(v,
+            @sub_elements[key_name] ||= self.class.new(v,
                                       :recurse_over_arrays => @recurse_over_arrays,
                                       :mutate_input_hash => true)
           elsif v.is_a?(Array) and @recurse_over_arrays
-            @sub_elements[name] ||= recurse_over_array(v)
+            @sub_elements[key_name] ||= recurse_over_array(v)
           else
             v
           end
         end
         define_method("#{name}=") do |x|
-          @sub_elements.delete(name)
-          modifiable[name] = x
+          @sub_elements.delete(key_name)
+          modifiable[key_name] = x
         end
-        define_method("#{name}_as_a_hash") { @table[name] }
+        define_method("#{name}_as_a_hash") { @table[key_name] }
       end
     end
-    name
+    key_name
   end
 
   # TODO: Make me private if/when we do an API-breaking change release
@@ -77,5 +82,35 @@ class RecursiveOpenStruct < OpenStruct
       end
     end
   end
+
+  def delete_field(name)
+    sym = _get_key_from_table_(name)
+    singleton_class.__send__(:remove_method, sym, "#{sym}=")
+    @sub_elements.delete sym
+    @table.delete sym
+  end
+
+  def eql?(other)
+    return false unless other.kind_of?(OpenStruct)
+    @table.eql?(other.table)
+  end if RUBY_VERSION =~ /^1.9/
+
+  def hash
+    @table.hash
+  end if RUBY_VERSION =~ /^1.9/
+
+  def each_pair
+    return to_enum(:each_pair) { @table.size } unless block_given?
+    @table.each_pair{|p| yield p}
+  end if RUBY_VERSION =~ /^1.9/
+
+  private
+
+  def _get_key_from_table_(name)
+    return name.to_s if @table.has_key?(name.to_s)
+    return name.to_sym if @table.has_key?(name.to_sym)
+    name
+  end
+
 end
 
