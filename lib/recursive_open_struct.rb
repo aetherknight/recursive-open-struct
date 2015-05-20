@@ -3,8 +3,10 @@ require 'recursive_open_struct/version'
 
 require 'recursive_open_struct/debug_inspect'
 require 'recursive_open_struct/deep_dup'
+require 'recursive_open_struct/ruby_19_backport'
 
 class RecursiveOpenStruct < OpenStruct
+  include Ruby19Backport if RUBY_VERSION =~ /\A1.9/
   include DebugInspect
 
   def initialize(hash={}, args={})
@@ -19,10 +21,6 @@ class RecursiveOpenStruct < OpenStruct
 
   def initialize_copy(orig)
     super
-
-    # Apply fix if necessary:
-    #   https://github.com/ruby/ruby/commit/2d952c6d16ffe06a28bb1007e2cd1410c3db2d58
-    @table.each_key{|key| new_ostruct_member(key)} if RUBY_VERSION =~ /^1.9/
 
     # deep copy the table to separate the two objects
     @table = @deep_dup.call(orig.instance_variable_get(:@table))
@@ -39,10 +37,6 @@ class RecursiveOpenStruct < OpenStruct
   def [](name)
     send name
   end
-
-  def []=(name, value)
-    modifiable[new_ostruct_member(name)] = value
-  end if RUBY_VERSION =~ /^1.9/
 
   def new_ostruct_member(name)
     key_name = _get_key_from_table_ name
@@ -89,20 +83,6 @@ class RecursiveOpenStruct < OpenStruct
     @sub_elements.delete sym
     @table.delete sym
   end
-
-  def eql?(other)
-    return false unless other.kind_of?(OpenStruct)
-    @table.eql?(other.table)
-  end if RUBY_VERSION =~ /^1.9/
-
-  def hash
-    @table.hash
-  end if RUBY_VERSION =~ /^1.9/
-
-  def each_pair
-    return to_enum(:each_pair) { @table.size } unless block_given?
-    @table.each_pair{|p| yield p}
-  end if RUBY_VERSION =~ /^1.9/
 
   private
 
