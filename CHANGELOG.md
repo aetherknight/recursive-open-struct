@@ -1,3 +1,11 @@
+0.6.4 / 2015-05-20
+==================
+
+* FIX: Kris Dekeyser: Fix indifferent subscript access (string or symbol). Also
+  backported several ostruct methods for Ruby 1.9.x.
+* FIX: Partial fix for allowing an array in a RecursiveOpenStruct tree to be
+  modified. However, methods such as to_hash are still broken.
+
 0.6.3 / 2015-04-11
 ==================
 
