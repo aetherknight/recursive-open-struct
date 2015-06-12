@@ -95,8 +95,8 @@ describe RecursiveOpenStruct do
     end
 
     context "each_pair" do
-      it "iterates over hash keys" do
-        expect(ros.each_pair).to match hash.each_pair
+      it "iterates over hash keys, with keys as symbol" do
+        expect(ros.each_pair).to match ({:foo => 'foo', :bar => :bar}.each_pair)
       end
     end
 
