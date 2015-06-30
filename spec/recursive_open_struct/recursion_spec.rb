@@ -5,7 +5,7 @@ describe RecursiveOpenStruct do
 
   describe "recursive behavior" do
     let(:h) { { :blah => { :another => 'value' } } }
-    subject { RecursiveOpenStruct.new(h) }
+    subject(:ros) { RecursiveOpenStruct.new(h) }
 
     it "can convert the entire hash tree back into a hash" do
       blank_obj = Object.new
@@ -280,5 +280,16 @@ describe RecursiveOpenStruct do
         end
       end # modifying an array and then recursing
     end # recursing over arrays
+
+    describe 'nested nil values' do
+      let(:h) { { foo: { bar: nil }} }
+      it 'returns nil' do
+        expect(subject.foo.bar).to be_nil
+      end
+
+      it 'returns a hash with the key and a nil value' do
+        expect(subject.to_hash).to eq({ foo: { bar: nil }})
+      end
+    end # nested nil values
   end # recursive behavior
 end

@@ -12,6 +12,23 @@ describe RecursiveOpenStruct do
         ros.blah = "John Smith"
         expect(ros.blah).to eq "John Smith"
       end
+
+      it 'returns nil for missing attributes' do
+        expect(ros.foo).to be_nil
+      end
+    end
+
+    context 'when initialized with nil' do
+      let(:hash) { nil }
+      it 'returns nil for missing attributes' do
+        expect(ros.foo).to be_nil
+      end
+    end
+
+    context 'when initialized with an empty hash' do
+      it 'returns nil for missing attributes' do
+        expect(ros.foo).to be_nil
+      end
     end
 
     context "when initialized from a hash" do

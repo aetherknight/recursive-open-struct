@@ -9,7 +9,8 @@ class RecursiveOpenStruct < OpenStruct
   include Ruby19Backport if RUBY_VERSION =~ /\A1.9/
   include DebugInspect
 
-  def initialize(hash={}, args={})
+  def initialize(hash=nil, args={})
+    hash ||= {}
     @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
     @deep_dup = DeepDup.new(recurse_over_arrays: @recurse_over_arrays)
 
