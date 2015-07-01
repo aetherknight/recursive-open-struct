@@ -1,3 +1,8 @@
+0.6.5 / 2015-06-30
+==================
+
+* FIX: Fix ROS when initialized with nil instead of a hash.
+
 0.6.4 / 2015-05-20
 ==================
 
