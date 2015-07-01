@@ -124,13 +124,14 @@ describe RecursiveOpenStruct do
 
       end
 
-      context 'keeps original keys' do
+      context 'transform original keys to symbols' do
         subject(:recursive) { RecursiveOpenStruct.new(recursive_hash, recurse_over_arrays: true) }
-        let(:recursive_hash) { {:foo => [ {'bar' => [ { 'foo' => :bar} ] } ] } }
-        let(:modified_hash) { {:foo => [ {'bar' => [ { 'foo' => :foo} ] } ] } }
+        let(:recursive_hash) { {:foo => [ {:bar => [ { :foo => :bar} ] } ] } }
+        let(:modified_hash) { {:foo => [ {:bar => [ { :foo => :foo} ] } ] } }
+        let(:symbolized_hash) { Hash[hash.map{|(k,v)| [k.to_sym,v]}] }
 
         it 'after initialization' do
-          expect(hash_ros.to_h).to eq hash
+          expect(hash_ros.to_h).to eq symbolized_hash
         end
 
         it 'in recursive hashes' do
