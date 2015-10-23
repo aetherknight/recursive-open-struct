@@ -15,7 +15,6 @@ class RecursiveOpenStruct < OpenStruct
     @deep_dup = DeepDup.new(recurse_over_arrays: @recurse_over_arrays)
 
     @table = args.fetch(:mutate_input_hash, false) ? hash : @deep_dup.call(hash)
-    @table && @table.each_key { |k| new_ostruct_member(k) }
 
     @sub_elements = {}
   end
@@ -39,9 +38,37 @@ class RecursiveOpenStruct < OpenStruct
     send name
   end
 
+  # Makes sure ROS responds as expected on #respond_to? and #method requests
+  def respond_to_missing?(mid, include_private = false)
+    mname = _get_key_from_table_(mid.to_s.chomp('='))
+    @table.key?(mname) || super
+  end
+
+  # Adapted implementation of method_missing to accomodate the differences between ROS and OS.
+  def method_missing(mid, *args)
+    len = args.length
+    if mid =~ /^(.*)=$/
+      if len != 1
+        raise ArgumentError, "wrong number of arguments (#{len} for 1)", caller(1)
+      end
+      modifiable[new_ostruct_member($1.to_sym)] = args[0]
+    elsif len == 0
+      key = mid
+      key = $1 if key =~ /^(.*)_as_a_hash$/
+      if @table.key?(_get_key_from_table_(key))
+        new_ostruct_member(key)
+        send(mid)
+      end
+    else
+      err = NoMethodError.new "undefined method `#{mid}' for #{self}", mid, args
+      err.set_backtrace caller(1)
+      raise err
+    end
+  end
+
   def new_ostruct_member(name)
     key_name = _get_key_from_table_ name
-    unless self.respond_to?(name)
+    unless self.methods.include?(name.to_sym)
       class << self; self; end.class_eval do
         define_method(name) do
           v = @table[key_name]
@@ -83,7 +110,7 @@ class RecursiveOpenStruct < OpenStruct
 
   def delete_field(name)
     sym = _get_key_from_table_(name)
-    singleton_class.__send__(:remove_method, sym, "#{sym}=")
+    singleton_class.__send__(:remove_method, sym, "#{sym}=") rescue NoMethodError # ignore if methods not yet generated.
     @sub_elements.delete sym
     @table.delete sym
   end
