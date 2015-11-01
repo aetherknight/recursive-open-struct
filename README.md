@@ -19,8 +19,8 @@ have to explicitly enable it:
     h = { :somearr => [ { name: 'a'}, { name: 'b' } ] }
     ros = RecursiveOpenStruct.new(h, recurse_over_arrays: true )
 
-    ros.somarr[0].name # => 'a'
-    ros.somarr[1].name # => 'b'
+    ros.somearr[0].name # => 'a'
+    ros.somearr[1].name # => 'b'
 
 Also, by default it will turn all hash keys into symbols internally:
 
