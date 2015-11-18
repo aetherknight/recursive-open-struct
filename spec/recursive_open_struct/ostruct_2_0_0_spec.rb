@@ -100,6 +100,46 @@ describe RecursiveOpenStruct do
       end
     end
 
+    context "marshal support" do
+      let(:args) { {recurse_over_arrays: true, mutate_input_hash: false} }
+      subject(:ros) { RecursiveOpenStruct.new(hash, args) }
+      subject(:loaded_ros) do
+        loaded = RecursiveOpenStruct.new
+        loaded.marshal_load(ros.marshal_dump)
+        loaded
+      end
+
+      it "dumps the data and arguments" do
+        marshal_data, marshal_args = ros.marshal_dump
+        expect(marshal_data).to eq hash
+        expect(marshal_args).to eq args
+      end
+
+      it "loads the data and arguments" do
+        expect(loaded_ros.each_pair).to match hash.each_pair
+      end
+
+      context "with nested data" do
+        let(:hash) do
+          {
+            foo: 'foo',
+            bar: { nested_foo: 'nested_foo' },
+            list: [{ foo: :bar }, { bar: :foo }]
+          }
+        end
+        it "can be accessed as a struct" do
+          expect(loaded_ros.bar.nested_foo).to eq hash[:bar][:nested_foo]
+          expect(loaded_ros.list[0].foo).to eq hash[:list][0][:foo]
+        end
+        it "can be yamlized and restored" do
+          dump = Marshal.dump(ros)
+          recreated = Marshal.load(dump)
+          expect(recreated.bar.nested_foo).to eq hash[:bar][:nested_foo]
+          expect(recreated.list[0].foo).to eq hash[:list][0][:foo]
+        end
+      end
+    end
+
   end
 
 end
