@@ -100,19 +100,6 @@ class RecursiveOpenStruct < OpenStruct
     key_name
   end
 
-  # TODO: Make me private if/when we do an API-breaking change release
-  def recurse_over_array(array)
-    array.map do |a|
-      if a.is_a? Hash
-        self.class.new(a, :recurse_over_arrays => true, :mutate_input_hash => true)
-      elsif a.is_a? Array
-        recurse_over_array a
-      else
-        a
-      end
-    end
-  end
-
   def delete_field(name)
     sym = _get_key_from_table_(name)
     singleton_class.__send__(:remove_method, sym, "#{sym}=") rescue NoMethodError # ignore if methods not yet generated.
@@ -127,4 +114,17 @@ class RecursiveOpenStruct < OpenStruct
     return name.to_sym if @table.has_key?(name.to_sym)
     name
   end
+
+  def recurse_over_array(array)
+    array.map do |a|
+      if a.is_a? Hash
+        self.class.new(a, :recurse_over_arrays => true, :mutate_input_hash => true)
+      elsif a.is_a? Array
+        recurse_over_array a
+      else
+        a
+      end
+    end
+  end
+
 end
