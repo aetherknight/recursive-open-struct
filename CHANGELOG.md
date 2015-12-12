@@ -1,3 +1,19 @@
+1.0.0 / 2015-12-11
+==================
+
+* API-Breaking Change: Frederico Aloi: Change `to_h` to always return symbol
+  keys. This is more consistent with OpenStruct.
+* API-Breaking Change: No longer officially supporting Ruby 1.9.3.
+* NEW/FIX: Kris Dekeyser: Ensure that ROS continues to work with the new
+  version of OpenStruct included in dev versions of Ruby 2.2.x and Ruby 2.3. It
+  now implements lazy attribute creation, which broke ROS.
+* NEW: Added `preserve_original_keys` option to revert to the 0.x behavior. Set
+  it to true if you want methods like `to_h` to return strings and perhaps
+  other non-symbols.
+* NEW: Ensuring support for Ruby 2.0.0+ including the upcoming 2.3 release and
+  JRuby 9000.
+* FIX: Peter Yeremenko: Fix a mistake in one of the examples in the README
+
 0.6.5 / 2015-06-30
 ==================
 
