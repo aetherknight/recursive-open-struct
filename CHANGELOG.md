@@ -1,3 +1,10 @@
+1.0.1 / 2016-01-18
+==================
+
+* FIX [#42](https://github.com/aetherknight/recursive-open-struct/issues/42):
+  `[]` tried to call private methods if they existed instead of triggering the
+  `method_missing` code path. Thanks to @SaltwaterC for reporting.
+
 1.0.0 / 2015-12-11
 ==================
 
