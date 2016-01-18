@@ -39,7 +39,7 @@ class RecursiveOpenStruct < OpenStruct
   alias_method :to_hash, :to_h
 
   def [](name)
-    send name
+    public_send(name)
   end
 
   # Makes sure ROS responds as expected on #respond_to? and #method requests

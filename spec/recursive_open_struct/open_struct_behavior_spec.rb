@@ -52,6 +52,19 @@ describe RecursiveOpenStruct do
         end
       end
 
+      context 'that contains keys that mirror existing private methods' do
+        let(:hash) { { test: :foo, rand: 'not a number' } }
+
+        # https://github.com/aetherknight/recursive-open-struct/issues/42
+        it 'handles subscript notation without calling the method name first (#42)' do
+          expect(ros['test']).to eq :foo
+          expect(ros['rand']).to eq 'not a number'
+
+          expect(ros.test).to eq :foo
+          expect(ros.rand).to eq 'not a number'
+        end
+      end
+
     end
 
 
