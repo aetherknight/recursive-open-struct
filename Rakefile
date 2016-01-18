@@ -42,4 +42,14 @@ task :fix_permissions do
   FileUtils.chmod 0755, ['lib','spec'], :verbose => true
 end
 
-task :build => :fix_permissions
+desc "Update the AUTHORS.txt file"
+task :update_authors do
+  authors = `git log --format="%aN <%aE>"|sort -f|uniq`
+  File.open('AUTHORS.txt', 'w') do |f|
+    f.write("Recursive-open-struct was written by these fine people:\n\n")
+    f.write(authors.split("\n").map { |a| "* #{a}" }.join( "\n" ))
+    f.write("\n")
+  end
+end
+
+task :build => [:update_authors, :fix_permissions]

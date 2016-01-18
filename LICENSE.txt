@@ -1,4 +1,5 @@
-Copyright (c) 2009-2015 William (B.J.) Snow Orvis
+Copyright (c) 2009-2016, The Recursive-open-struct developers (given in the
+file AUTHORS.txt).
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

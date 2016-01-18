@@ -56,4 +56,5 @@ You may also install the gem manually :
 
 ## Copyright
 
-Copyright (c) 2009-2015 William (B.J.) Snow Orvis. See LICENSE for details.
+Copyright (c) 2009-2016, The Recursive-open-struct developers (given in the
+file AUTHORS.txt). See LICENSE.txt for details.
