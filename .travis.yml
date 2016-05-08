@@ -2,11 +2,11 @@
 language: ruby
 rvm:
   - 2.0.0
-  - 2.1.7
-  - 2.2.3
-  - 2.3.0
+  - 2.1.10
+  - 2.2.5
+  - 2.3.1
   - ruby-head
   - jruby-19mode
-  - jruby-9.0.0.0
+  - jruby-9.0.5.0
   - jruby-head
 sudo: false
