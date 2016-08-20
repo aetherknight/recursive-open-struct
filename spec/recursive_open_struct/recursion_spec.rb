@@ -261,6 +261,11 @@ describe RecursiveOpenStruct do
           it "ROS's it" do
             expect(subject.mystery.science[0].theatre).to eq 9000
           end
+
+          specify "the changes show up in .to_h" do
+            pending "This is broken"
+            expect(subject.to_h).to eq({ mystery: { science: [{theatre: 9000}]}})
+          end
         end
 
         context 'after appending a hash to an array' do
