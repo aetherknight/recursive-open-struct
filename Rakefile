@@ -53,3 +53,8 @@ task :update_authors do
 end
 
 task :build => [:update_authors, :fix_permissions]
+
+desc "Run an interactive pry shell with ros required"
+task :pry do
+  sh "pry -I lib -r recursive-open-struct"
+end
