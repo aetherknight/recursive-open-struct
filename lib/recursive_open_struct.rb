@@ -13,9 +13,11 @@ class RecursiveOpenStruct < OpenStruct
     hash ||= {}
     @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
     @preserve_original_keys = args.fetch(:preserve_original_keys, false)
+    @recursive_ostruct_class = args.fetch(:recursive_ostruct_class, false)
     @deep_dup = DeepDup.new(
       recurse_over_arrays: @recurse_over_arrays,
-      preserve_original_keys: @preserve_original_keys
+      preserve_original_keys: @preserve_original_keys,
+      recursive_ostruct_class: @recursive_ostruct_class
     )
 
     @table = args.fetch(:mutate_input_hash, false) ? hash : @deep_dup.call(hash)
@@ -77,10 +79,12 @@ class RecursiveOpenStruct < OpenStruct
         define_method(name) do
           v = @table[key_name]
           if v.is_a?(Hash)
-            @sub_elements[key_name] ||= self.class.new(
+            klass = @recursive_ostruct_class ? RecursiveOpenStruct : self.class
+            @sub_elements[key_name] ||= klass.new(
               v,
               recurse_over_arrays: @recurse_over_arrays,
               preserve_original_keys: @preserve_original_keys,
+              recursive_ostruct_class: @recursive_ostruct_class,
               mutate_input_hash: true
             )
           elsif v.is_a?(Array) and @recurse_over_arrays
@@ -118,7 +122,8 @@ class RecursiveOpenStruct < OpenStruct
   def recurse_over_array(array)
     array.map do |a|
       if a.is_a? Hash
-        self.class.new(a, :recurse_over_arrays => true, :mutate_input_hash => true)
+        klass = @recursive_ostruct_class ? RecursiveOpenStruct : self.class
+        klass.new(a, :recurse_over_arrays => true, :recursive_ostruct_class => @recursive_ostruct_class, :mutate_input_hash => true)
       elsif a.is_a? Array
         recurse_over_array a
       else

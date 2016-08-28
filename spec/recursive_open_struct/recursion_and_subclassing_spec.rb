@@ -11,4 +11,14 @@ describe RecursiveOpenStruct do
       expect(rossc.one.first.class).to eq subclass
     end
   end
+
+  describe "don't call initializer of subclass recursively" do
+    let(:subclass) { Class.new(SubclassWithInitCheck) }
+
+    subject(:rossc) { subclass.new({ :one => {:two => :three} }, recursive_ostruct_class: true) }
+
+    specify "no error raised" do
+      expect(rossc).to_not eq nil 
+    end
+  end
 end

@@ -34,6 +34,16 @@ You can preserve the original keys by enabling `:preserve_original_keys`:
     ros = RecursiveOpenStruct.new(h, preserve_original_keys: true)
     ros.to_h # => { 'fear' => 'is', 'the' => 'mindkiller' }
 
+When subclassing RecursiveOpenStruct the subclass with be used for recursion,
+so nested elements will also be of subclass. However this means that custom
+initialize methods are also being invoked for each recursion.
+You can prevent that by enabling `:recursive_ostruct_class`:
+
+    h = { one: { two: 'three' } } }
+    s = YourSubclass.new(h, recursive_ostruct_class: true)
+    s.class.name # => YourSubclass
+    s.one.class.name # => RecursiveOpenStruct
+
 ## Installation
 
 Available as a gem in rubygems, the default gem repository.
@@ -47,7 +57,7 @@ You may also install the gem manually :
     gem install recursive-open-struct
 
 ## Contributing
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for your new or changed functionality. Make sure the tests you add
