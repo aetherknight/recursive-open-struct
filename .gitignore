@@ -48,3 +48,5 @@ tmtags
 #*.rbc
 
 Gemfile.lock
+
+.ruby-version
