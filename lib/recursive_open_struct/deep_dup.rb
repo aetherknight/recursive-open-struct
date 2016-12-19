@@ -17,6 +17,7 @@ class RecursiveOpenStruct::DeepDup
       end
     elsif obj.is_a?(Array) && @recurse_over_arrays
       obj.each_with_object([]) do |value, arr|
+        value = value.is_a?(RecursiveOpenStruct) ? value.to_h : value
         arr << value_or_deep_dup(value, visited)
       end
     else

@@ -116,15 +116,15 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def recurse_over_array(array)
-    array.map do |a|
+    array.each_with_index do |a, i|
       if a.is_a? Hash
-        self.class.new(a, :recurse_over_arrays => true, :mutate_input_hash => true)
+        array[i] = self.class.new(a, :recurse_over_arrays => true, 
+          :mutate_input_hash => true, :preserve_original_keys => @preserve_original_keys)
       elsif a.is_a? Array
-        recurse_over_array a
-      else
-        a
+        array[i] = recurse_over_array a
       end
     end
+    array
   end
 
 end
