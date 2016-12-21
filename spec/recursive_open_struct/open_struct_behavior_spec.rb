@@ -65,6 +65,17 @@ describe RecursiveOpenStruct do
         end
       end
 
+      if [/\A([0-9]+)\.([0-9]+)\.([0-9]+)\z/.match(RUBY_VERSION)].tap { |l| m = l[0] ; l[0] = (m[1].to_i >= 2 && m[2].to_i >= 4) }.first
+        context 'when Ruby 2.4.0 or newer' do
+          specify 'new_ostruct_member! is private' do
+            expect {
+              ros.new_ostruct_member!(:bonsoir)
+            }.to raise_error(NoMethodError)
+              # OpenStruct.new().new_ostruct_member!(:foo)
+          end
+        end
+      end
+
     end
 
 
