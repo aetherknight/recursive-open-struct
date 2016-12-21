@@ -1,6 +1,7 @@
 ---
 language: ruby
 rvm:
+  - 1.9.3
   - 2.0.0
   - 2.1.10
   - 2.2.6
@@ -12,3 +13,12 @@ rvm:
   - jruby-9.1.5.0
   - jruby-head
 sudo: false
+matrix:
+  allow_failures:
+    # No longer supported
+    - rvm: 1.9.3
+    - rvm: 2.0.0
+    - rvm: jruby-19mode
+    # Future
+    - rvm: ruby-head
+    - rvm: jruby-head
