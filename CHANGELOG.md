@@ -1,3 +1,16 @@
+n.n.n / XXXX-XX-XX
+==================
+
+* FIX [#49](https://github.com/aetherknight/recursive-open-struct/issues/49):
+  Ensure test suite passes with Ruby 2.4.0-rc1.
+
+1.0.2 / 2016-12-20
+==================
+
+* FIX [#46](https://github.com/aetherknight/recursive-open-struct/issues/46):
+  Pedro Sena: fix issues with mutating arrays within an ROS that has
+  `recurse_over_arrays: true`
+
 1.0.1 / 2016-01-18
 ==================
 
