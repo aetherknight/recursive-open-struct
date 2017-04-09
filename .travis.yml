@@ -4,9 +4,9 @@ rvm:
   # - 1.9.3  # json gem now requires Ruby ~> 2.0
   - 2.0.0
   - 2.1.10
-  - 2.2.6
-  - 2.3.3
-  - 2.4.0-rc1  # TODO: change to 2.4.0
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
   - ruby-head
   - jruby-19mode
   - jruby-9.0.5.0
@@ -17,6 +17,7 @@ matrix:
   allow_failures:
     # No longer supported
     - rvm: 2.0.0
+    - rvm: 2.1.10
     - rvm: jruby-19mode
     # Future
     - rvm: ruby-head
