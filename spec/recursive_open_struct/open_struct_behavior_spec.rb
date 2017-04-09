@@ -63,6 +63,15 @@ describe RecursiveOpenStruct do
           expect(ros.test).to eq :foo
           expect(ros.rand).to eq 'not a number'
         end
+
+      end
+
+      context 'that contains keys that mirror existing public methods inherited from Object' do
+        let(:hash) { { method: :something } }
+        it 'handles subscript notation without calling the existing methods' do
+          expect(ros[:method]).to eq :something
+          expect(ros['method']).to eq :something
+        end
       end
 
       if [/\A([0-9]+)\.([0-9]+)\.([0-9]+)\z/.match(RUBY_VERSION)].tap { |l| m = l[0] ; l[0] = (m[1].to_i >= 2 && m[2].to_i >= 4) }.first

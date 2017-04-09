@@ -43,7 +43,21 @@ class RecursiveOpenStruct < OpenStruct
   alias_method :to_hash, :to_h
 
   def [](name)
-    public_send(name)
+    key_name = _get_key_from_table_(name)
+    v = @table[key_name]
+    if v.is_a?(Hash)
+      @sub_elements[key_name] ||= self.class.new(
+        v,
+        recurse_over_arrays: @recurse_over_arrays,
+        preserve_original_keys: @preserve_original_keys,
+        mutate_input_hash: true
+      )
+    elsif v.is_a?(Array) and @recurse_over_arrays
+      @sub_elements[key_name] ||= recurse_over_array(v)
+      @sub_elements[key_name] = recurse_over_array(@sub_elements[key_name])
+    else
+      v
+    end
   end
 
   # Makes sure ROS responds as expected on #respond_to? and #method requests
@@ -80,24 +94,11 @@ class RecursiveOpenStruct < OpenStruct
   # TODO: Rename to new_ostruct_member! once we care less about Rubies before
   # 2.4.0.
   def new_ostruct_member(name)
-    key_name = _get_key_from_table_ name
+    key_name = _get_key_from_table_(name)
     unless self.methods.include?(name.to_sym)
       class << self; self; end.class_eval do
         define_method(name) do
-          v = @table[key_name]
-          if v.is_a?(Hash)
-            @sub_elements[key_name] ||= self.class.new(
-              v,
-              recurse_over_arrays: @recurse_over_arrays,
-              preserve_original_keys: @preserve_original_keys,
-              mutate_input_hash: true
-            )
-          elsif v.is_a?(Array) and @recurse_over_arrays
-            @sub_elements[key_name] ||= recurse_over_array(v)
-            @sub_elements[key_name] = recurse_over_array(@sub_elements[key_name])
-          else
-            v
-          end
+          self[key_name]
         end
         define_method("#{name}=") do |x|
           @sub_elements.delete(key_name)
