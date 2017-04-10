@@ -1,6 +1,11 @@
-n.n.n / XXXX-XX-XX
+1.0.3 / 2017-04-10
 ==================
 
+* No longer officially supporting Ruby 2.0.0 and Ruby 2.1.x. They are still
+  tested against but are permitted to fail within the Travis configuration.
+* FIX: Fix subscript notation for keys that collide with existing public
+  methods. Related to
+  [#51](https://github.com/aetherknight/recursive-open-struct/issues/51).
 * FIX [#49](https://github.com/aetherknight/recursive-open-struct/issues/49):
   Ensure test suite passes with Ruby 2.4.0-rc1.
 
