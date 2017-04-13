@@ -1,3 +1,4 @@
+require 'set'
 class RecursiveOpenStruct::DeepDup
   def initialize(opts={})
     @recurse_over_arrays = opts.fetch(:recurse_over_arrays, false)
@@ -10,7 +11,7 @@ class RecursiveOpenStruct::DeepDup
 
   private
 
-  def deep_dup(obj, visited=[])
+  def deep_dup(obj, visited=Set.new)
     if obj.is_a?(Hash)
       obj.each_with_object({}) do |(key, value), h|
         h[@preserve_original_keys ? key : key.to_sym] = value_or_deep_dup(value, visited)
