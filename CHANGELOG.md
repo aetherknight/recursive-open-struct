@@ -1,3 +1,11 @@
+1.0.4 / 2017-04-29
+==================
+
+* FIX
+  [#52](https://github.com/aetherknight/recursive-open-struct/pull/52): Joe
+  Rafaniello: Improve performance of DeepDup by using Set instead of an Array
+  to track visited nodes.
+
 1.0.3 / 2017-04-10
 ==================
 

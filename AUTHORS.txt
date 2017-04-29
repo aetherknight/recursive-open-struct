@@ -3,6 +3,7 @@ Recursive-open-struct was written by these fine people:
 * Cédric Felizard <cedric@felizard.fr>
 * Federico Aloi <federico.aloi@gmail.com>
 * fervic <roberto@runawaybit.com>
+* Joe Rafaniello <jrafanie@redhat.com>
 * Kris Dekeyser <kris.dekeyser@libis.be>
 * Matt Culpepper <matt@culpepper.co>
 * Matthew O'Riordan <matthew.oriordan@gmail.com>
