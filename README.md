@@ -47,12 +47,20 @@ You may also install the gem manually :
     gem install recursive-open-struct
 
 ## Contributing
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for your new or changed functionality. Make sure the tests you add
-  provide clean and clear explanation of the feature.
-* Send me a pull request. Bonus points for topic branches.
+
+For simple bug fixes, feel free to provide a pull request.
+
+For anything else (new features, bugs that you want to report, and bugs that
+are difficult to fix), I recommend opening an issue first to discuss the
+feature or bug. I am fairly cautious about adding new features that might cause
+RecursiveOpenStruct's API to deviate radically from OpenStruct's (since it
+might introduce new reserved method names), and it is useful to discuss the
+best way to solve a problem when there are tradeoffs or imperfect solutions.
+
+When contributing code that changes behavior or fixes bugs, please include unit
+tests to cover the new behavior or to provide regression testing for bugs.
+Also, treat the unit tests as documentation --- make sure they are clean,
+clear, and concise, and well organized.
 
 ## Copyright
 
