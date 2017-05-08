@@ -16,6 +16,19 @@ describe RecursiveOpenStruct do
       expect(ros.to_hash).to eq h
     end
 
+    describe "#merge" do
+      let(:other_h) { { more: 'data' } }
+      let(:other_ros) { RecursiveOpenStruct.new(other_h) }
+
+      it "can merge in a hash" do
+        expect(ros.merge(other_h).to_h).to eq(h.merge(other_h))
+      end
+
+      it "can merge in a RecursiveOpenStruct" do
+        expect(ros.merge(other_ros).to_h).to eq(h.merge(other_h))
+      end
+    end
+
     it "returns accessed hashes as RecursiveOpenStructs instead of hashes" do
       expect(subject.blah.another).to eq 'value'
     end
