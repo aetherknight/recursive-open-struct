@@ -95,7 +95,7 @@ class RecursiveOpenStruct < OpenStruct
   # 2.4.0.
   def new_ostruct_member(name)
     key_name = _get_key_from_table_(name)
-    unless self.methods.include?(name.to_sym)
+    unless self.singleton_class.method_defined?(name.to_sym)
       class << self; self; end.class_eval do
         define_method(name) do
           self[key_name]
