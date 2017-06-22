@@ -1,8 +1,14 @@
+1.0.5 / 2017-06-21
+==================
+
+* FIX [#54](https://github.com/aetherknight/recursive-open-struct/pull/54):
+  Beni Cherniavsky-Paskin: Improve performance of `new_ostruct_member` by using
+  `self.singleton_class.method_defined?` instead of `self.methods.include?`
+
 1.0.4 / 2017-04-29
 ==================
 
-* FIX
-  [#52](https://github.com/aetherknight/recursive-open-struct/pull/52): Joe
+* FIX [#52](https://github.com/aetherknight/recursive-open-struct/pull/52): Joe
   Rafaniello: Improve performance of DeepDup by using Set instead of an Array
   to track visited nodes.
 

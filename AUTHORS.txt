@@ -1,5 +1,6 @@
 Recursive-open-struct was written by these fine people:
 
+* Beni Cherniavsky-Paskin <cben@redhat.com>
 * Cédric Felizard <cedric@felizard.fr>
 * Federico Aloi <federico.aloi@gmail.com>
 * fervic <roberto@runawaybit.com>
