@@ -66,7 +66,7 @@ class RecursiveOpenStruct < OpenStruct
     @table.key?(mname) || super
   end
 
-  # Adapted implementation of method_missing to accomodate the differences between ROS and OS.
+  # Adapted implementation of method_missing to accommodate the differences between ROS and OS.
   #
   # TODO: Use modifiable? instead of modifiable, and new_ostruct_member!
   # instead of new_ostruct_member once we care less about Rubies before 2.4.0.
