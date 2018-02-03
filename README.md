@@ -64,5 +64,5 @@ clear, and concise, and well organized.
 
 ## Copyright
 
-Copyright (c) 2009-2017, The Recursive-open-struct developers (given in the
+Copyright (c) 2009-2018, The Recursive-open-struct developers (given in the
 file AUTHORS.txt). See LICENSE.txt for details.
