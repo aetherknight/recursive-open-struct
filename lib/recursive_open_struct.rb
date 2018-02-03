@@ -68,7 +68,8 @@ class RecursiveOpenStruct < OpenStruct
     @table.key?(mname) || super
   end
 
-  # Adapted implementation of method_missing to accommodate the differences between ROS and OS.
+  # Adapted implementation of method_missing to accommodate the differences
+  # between ROS and OS.
   #
   # TODO: Use modifiable? instead of modifiable, and new_ostruct_member!
   # instead of new_ostruct_member once we care less about Rubies before 2.4.0.
@@ -115,7 +116,7 @@ class RecursiveOpenStruct < OpenStruct
   # Support Ruby 2.4.0+'s changes in a way that doesn't require dynamically
   # modifying ROS.
   #
-  # TODO: Once we care less about Rubies before 2.4.0, reverse this sot hat
+  # TODO: Once we care less about Rubies before 2.4.0, reverse this so that
   # new_ostruct_member points to our version and not OpenStruct's.
   alias new_ostruct_member! new_ostruct_member
   # new_ostruct_member! is private, but new_ostruct_member is not on OpenStruct in 2.4.0-rc1?!
