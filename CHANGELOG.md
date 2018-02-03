@@ -1,3 +1,15 @@
+1.1.0 / 2018-02-03
+==================
+
+* NEW/FIX [#56](https://github.com/aetherknight/recursive-open-struct/issues/56):
+  Add better support for Ruby 2.3+'s `#dig` method (when it exists for the
+  current version of Ruby), so that nested Hashes are properly converted to
+  RecursiveOpenStructs. `OpenStruct#dig`'s implementation was returning Hashes
+  and does not handle `recurse_over_arrays` so ROS needs special support.
+  Thanks to maxp-edcast for reporting the issue.
+* FIX [#55](https://github.com/aetherknight/recursive-open-struct/pull/55):
+  EdwardBetts: Fixed a typo in the documentation/comment for `#method_missing`
+
 1.0.5 / 2017-06-21
 ==================
 
