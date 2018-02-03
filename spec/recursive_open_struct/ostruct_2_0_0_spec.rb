@@ -6,7 +6,7 @@ describe RecursiveOpenStruct do
   let(:hash) { {:foo => 'foo', 'bar' => :bar} }
   subject(:ros) { RecursiveOpenStruct.new(hash) }
 
-  describe "OpenStruct 2.0 methods" do
+  describe "OpenStruct 2.0+ methods" do
 
     context "Hash style setter" do
 
@@ -106,6 +106,6 @@ describe RecursiveOpenStruct do
       end
     end
 
-  end
+  end # describe OpenStruct 2.0+ methods
 
 end
