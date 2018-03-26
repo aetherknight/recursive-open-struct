@@ -62,6 +62,11 @@ tests to cover the new behavior or to provide regression testing for bugs.
 Also, treat the unit tests as documentation --- make sure they are clean,
 clear, and concise, and well organized.
 
+## SemVer Compliance
+
+Rescursive-open-struct follows [SemVer
+2.0](https://semver.org/spec/v2.0.0.html) for its versioning.
+
 ## Copyright
 
 Copyright (c) 2009-2018, The Recursive-open-struct developers (given in the
