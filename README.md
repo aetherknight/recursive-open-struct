@@ -3,48 +3,80 @@
 OpenStruct subclass that returns nested hash attributes as
 RecursiveOpenStructs.
 
+
+## Usage
+
 It allows for hashes within hashes to be called in a chain of methods:
 
-    ros = RecursiveOpenStruct.new( { fooa: { foob: 'fooc' } } )
+```ruby
+ros = RecursiveOpenStruct.new( { wha: { tagoo: 'siam' } } )
 
-    ros.fooa.foob # => 'fooc'
+ros.wha.tagoo # => 'siam'
+```
 
 Also, if needed, nested hashes can still be accessed as hashes:
 
-    ros.fooa_as_a_hash # { foob: 'fooc' }
+```ruby
+ros.wha_as_a_hash # { tagoo: 'siam' }
+```
+
+
+### Optional: Recurse Over Arrays
 
 RecursiveOpenStruct can also optionally recurse across arrays, although you
-have to explicitly enable it:
+have to explicitly enable it.
 
-    h = { :somearr => [ { name: 'a'}, { name: 'b' } ] }
-    ros = RecursiveOpenStruct.new(h, recurse_over_arrays: true )
+Default behavior:
+```ruby
+h = { :somearr => [ { name: 'a'}, { name: 'b' } ] }
 
-    ros.somearr[0].name # => 'a'
-    ros.somearr[1].name # => 'b'
+ros = RecursiveOpenStruct.new(h)
+ros.somearr # => [ { name: 'a'}, { name: 'b' } ]
+```
+
+Enabling `recurse_over_arrays`:
+
+```ruby
+ros = RecursiveOpenStruct.new(h, recurse_over_arrays: true )
+
+ros.somearr[0].name # => 'a'
+ros.somearr[1].name # => 'b'
+```
+
+
+### Optional: Preserve Original Keys
 
 Also, by default it will turn all hash keys into symbols internally:
 
-    h = { 'fear' => 'is', 'the' => 'mindkiller' } }
-    ros = RecursiveOpenStruct.new(h)
-    ros.to_h # => { fear: 'is', the: 'mindkiller' }
+```ruby
+h = { 'fear' => 'is', 'the' => 'mindkiller' } }
+ros = RecursiveOpenStruct.new(h)
+ros.to_h # => { fear: 'is', the: 'mindkiller' }
+```
 
 You can preserve the original keys by enabling `:preserve_original_keys`:
 
-    h = { 'fear' => 'is', 'the' => 'mindkiller' } }
-    ros = RecursiveOpenStruct.new(h, preserve_original_keys: true)
-    ros.to_h # => { 'fear' => 'is', 'the' => 'mindkiller' }
+```ruby
+h = { 'fear' => 'is', 'the' => 'mindkiller' } }
+ros = RecursiveOpenStruct.new(h, preserve_original_keys: true)
+ros.to_h # => { 'fear' => 'is', 'the' => 'mindkiller' }
+```
+
 
 ## Installation
 
 Available as a gem in rubygems, the default gem repository.
 
-If you use bundler, just throw that in your gemfile :
+If you use bundler, just add recursive-open-struct to your gemfile :
 
-    gem 'recursive-open-struct'
+```ruby
+gem 'recursive-open-struct'
+```
 
-You may also install the gem manually :
+You may also install the gem manually:
 
     gem install recursive-open-struct
+
 
 ## Contributing
 
@@ -62,10 +94,12 @@ tests to cover the new behavior or to provide regression testing for bugs.
 Also, treat the unit tests as documentation --- make sure they are clean,
 clear, and concise, and well organized.
 
+
 ## SemVer Compliance
 
 Rescursive-open-struct follows [SemVer
 2.0](https://semver.org/spec/v2.0.0.html) for its versioning.
+
 
 ## Copyright
 
