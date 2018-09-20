@@ -63,6 +63,14 @@ class RecursiveOpenStruct < OpenStruct
     end
   end
 
+  def []=(name, value)
+    modifiable do |tbl|
+      key_name = _get_key_from_table_(name)
+      @sub_elements.delete(key_name)
+      tbl[key_name] = value
+    end
+  end
+
   # Makes sure ROS responds as expected on #respond_to? and #method requests
   def respond_to_missing?(mid, include_private = false)
     mname = _get_key_from_table_(mid.to_s.chomp('=').chomp('_as_a_hash'))
@@ -71,16 +79,14 @@ class RecursiveOpenStruct < OpenStruct
 
   # Adapted implementation of method_missing to accommodate the differences
   # between ROS and OS.
-  #
-  # TODO: Use modifiable? instead of modifiable, and new_ostruct_member!
-  # instead of new_ostruct_member once we care less about Rubies before 2.4.0.
   def method_missing(mid, *args)
     len = args.length
     if mid =~ /^(.*)=$/
       if len != 1
         raise ArgumentError, "wrong number of arguments (#{len} for 1)", caller(1)
       end
-      modifiable[new_ostruct_member!($1.to_sym)] = args[0]
+      new_ostruct_member!($1.to_sym)
+      send(mid, args[0])
     elsif len == 0
       key = mid
       key = $1 if key =~ /^(.*)_as_a_hash$/
@@ -105,8 +111,7 @@ class RecursiveOpenStruct < OpenStruct
           self[key_name]
         end
         define_method("#{name}=") do |x|
-          @sub_elements.delete(key_name)
-          modifiable[key_name] = x
+          self[key_name] = x
         end
         define_method("#{name}_as_a_hash") { @table[key_name] }
       end
@@ -128,6 +133,13 @@ class RecursiveOpenStruct < OpenStruct
     singleton_class.__send__(:remove_method, sym, "#{sym}=") rescue NoMethodError # ignore if methods not yet generated.
     @sub_elements.delete sym
     @table.delete sym
+  end
+
+  protected
+
+  # TODO: Use modifiable? instead of modifiable once we care less about Rubies before 2.4.0.
+  def modifiable
+    block_given? ? yield(super) : super
   end
 
   private
