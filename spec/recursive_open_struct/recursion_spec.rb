@@ -28,6 +28,13 @@ describe RecursiveOpenStruct do
       expect(subject.blah_as_a_hash).to eq({ :another => 'value' })
     end
 
+    it "handles sub-element replacement with dotted notation before member setup" do
+      expect(ros[:blah][:another]).to eql 'value'
+      expect(ros.methods).not_to include(:blah)
+      ros.blah = { changed: 'backing' }
+      expect(ros.blah.changed).to eql 'backing'
+    end
+
     describe "handling loops in the original Hashes" do
       let(:h1) { { :a => 'a'} }
       let(:h2) { { :a => 'b', :h1 => h1 } }
