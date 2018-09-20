@@ -139,7 +139,7 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def _create_sub_element_(hash, **overrides)
-    self.class.new(hash, **@options, **overrides)
+    self.class.new(hash, @options.merge(overrides))
   end
 
   def recurse_over_array(array)
