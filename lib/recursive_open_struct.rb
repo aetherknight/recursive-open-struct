@@ -3,7 +3,6 @@ require 'recursive_open_struct/version'
 
 require 'recursive_open_struct/debug_inspect'
 require 'recursive_open_struct/deep_dup'
-require 'recursive_open_struct/ruby_19_backport'
 require 'recursive_open_struct/dig'
 
 # TODO: When we care less about Rubies before 2.4.0, match OpenStruct's method
@@ -11,7 +10,6 @@ require 'recursive_open_struct/dig'
 # `new_ostruct_member!`
 
 class RecursiveOpenStruct < OpenStruct
-  include Ruby19Backport if RUBY_VERSION =~ /\A1.9/
   include Dig if OpenStruct.public_instance_methods.include? :dig
   include DebugInspect
 
