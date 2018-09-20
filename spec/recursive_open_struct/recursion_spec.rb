@@ -55,6 +55,34 @@ describe RecursiveOpenStruct do
       expect(ros.blah.blargh).to eq "Janet"
     end
 
+    describe 'subscript mutation notation' do
+      it 'handles the basic case' do
+        subject[:blah] = 12345
+        expect(subject.blah).to eql 12345
+      end
+
+      it 'recurses properly' do
+        subject[:blah][:another] = 'abc'
+        expect(subject.blah.another).to eql 'abc'
+        expect(subject.blah_as_a_hash).to eql({ :another => 'abc' })
+      end
+
+      let(:diff){ { :different => 'thing' } }
+
+      it 'can replace the entire hash' do
+        expect(subject.to_h).to eql(h)
+        subject[:blah] = diff
+        expect(subject.to_h).to eql({ :blah => diff })
+      end
+
+      it 'updates sub-element cache' do
+        expect(subject.blah.different).to be_nil
+        subject[:blah] = diff
+        expect(subject.blah.different).to eql 'thing'
+        expect(subject.blah_as_a_hash).to eql(diff)
+      end
+    end
+
     context "after a sub-element has been modified" do
       let(:hash) do
         { :blah => { :blargh => "Brad" }, :some_array => [ 1, 2, 3] }
