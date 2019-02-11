@@ -9,6 +9,9 @@ require 'recursive_open_struct/dig'
 # TODO: When we care less about Rubies before 2.4.0, match OpenStruct's method
 # names instead of doing things like aliasing `new_ostruct_member` to
 # `new_ostruct_member!`
+#
+# TODO: `#*_as_a_hash` deprecated. Nested hashes can be referenced using
+# `#to_h`.
 
 class RecursiveOpenStruct < OpenStruct
   include Ruby19Backport if RUBY_VERSION =~ /\A1.9/
