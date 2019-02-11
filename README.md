@@ -80,19 +80,23 @@ You may also install the gem manually:
 
 ## Contributing
 
-For simple bug fixes, feel free to provide a pull request.
+If you would like to file or fix a bug, or propose a new feature, please review
+[CONTRIBUTING](CONTRIBUTING.md) first.
 
-For anything else (new features, bugs that you want to report, and bugs that
-are difficult to fix), I recommend opening an issue first to discuss the
-feature or bug. I am fairly cautious about adding new features that might cause
-RecursiveOpenStruct's API to deviate radically from OpenStruct's (since it
-might introduce new reserved method names), and it is useful to discuss the
-best way to solve a problem when there are tradeoffs or imperfect solutions.
 
-When contributing code that changes behavior or fixes bugs, please include unit
-tests to cover the new behavior or to provide regression testing for bugs.
-Also, treat the unit tests as documentation --- make sure they are clean,
-clear, and concise, and well organized.
+## Supported Ruby Versions
+
+Recursive-open-struct attempts to support just the versions of Ruby that are
+still actively maintained. Once a given major/minor version of Ruby no longer
+receives patches, they will no longer be supported (but recursive-open-struct
+may still work). I usually update the travis.yml file to reflect this when
+preparing for a new release or do some other work on recursive-open-struct.
+
+I also try to update recursive-open-struct to support new features in
+OpenStruct itself as new versions of Ruby are released. However, I don't
+actively monitor the status of this, so a newer feature might not work. If you
+encounter such a feature, please file a bug or a PR to fix it, and I will try
+to cut a new release of recursive-open-struct quickly.
 
 
 ## SemVer Compliance
