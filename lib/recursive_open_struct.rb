@@ -13,6 +13,9 @@ require 'recursive_open_struct/dig'
 class RecursiveOpenStruct < OpenStruct
   include Ruby19Backport if RUBY_VERSION =~ /\A1.9/
   include Dig if OpenStruct.public_instance_methods.include? :dig
+
+  # TODO: deprecated, possibly remove or make optional an runtime so that it
+  # doesn't normally pollute the public method namespace
   include DebugInspect
 
   def initialize(hash=nil, args={})
@@ -42,6 +45,8 @@ class RecursiveOpenStruct < OpenStruct
     @deep_dup.call(@table)
   end
 
+  # TODO: deprecated, unsupported by OpenStruct. OpenStruct does not consider
+  # itself to be a "kind of" Hash.
   alias_method :to_hash, :to_h
 
   def [](name)
