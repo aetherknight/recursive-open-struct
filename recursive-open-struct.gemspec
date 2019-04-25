@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = ["William (B.J.) Snow Orvis"]
   s.email = "aetherknight@gmail.com"
   s.date = Time.now.utc.strftime("%Y-%m-%d")
-  s.homepage = "http://github.com/aetherknight/recursive-open-struct"
+  s.homepage = "https://github.com/aetherknight/recursive-open-struct"
   s.licenses = ["MIT"]
 
   s.summary = "OpenStruct subclass that returns nested hash attributes as RecursiveOpenStructs"
