@@ -87,7 +87,7 @@ class RecursiveOpenStruct < OpenStruct
       if len != 1
         raise ArgumentError, "wrong number of arguments (#{len} for 1)", caller(1)
       end
-      modifiable[new_ostruct_member!($1.to_sym)] = args[0]
+      modifiable?[new_ostruct_member!($1.to_sym)] = args[0]
     elsif len == 0
       key = mid
       key = $1 if key =~ /^(.*)_as_a_hash$/
@@ -113,7 +113,7 @@ class RecursiveOpenStruct < OpenStruct
         end
         define_method("#{name}=") do |x|
           @sub_elements.delete(key_name)
-          modifiable[key_name] = x
+          modifiable?[key_name] = x
         end
         define_method("#{name}_as_a_hash") { @table[key_name] }
       end
