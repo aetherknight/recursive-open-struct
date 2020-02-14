@@ -87,7 +87,12 @@ class RecursiveOpenStruct < OpenStruct
       if len != 1
         raise ArgumentError, "wrong number of arguments (#{len} for 1)", caller(1)
       end
-      modifiable[new_ostruct_member!($1.to_sym)] = args[0]
+      if [new_ostruct_member!($1.to_sym)].respond_to?(:modifiable?, true)
+        modifiable?[new_ostruct_member!($1.to_sym)] = args[0]
+      else
+        modifiable[new_ostruct_member!($1.to_sym)] = args[0]
+      end
+
     elsif len == 0
       key = mid
       key = $1 if key =~ /^(.*)_as_a_hash$/
@@ -113,22 +118,17 @@ class RecursiveOpenStruct < OpenStruct
         end
         define_method("#{name}=") do |x|
           @sub_elements.delete(key_name)
-          modifiable[key_name] = x
+          if [key_name].respond_to?(:modifiable?, true)
+            modifiable?[key_name] = x
+          else
+            modifiable[key_name] = x
+          end
         end
         define_method("#{name}_as_a_hash") { @table[key_name] }
       end
     end
     key_name
   end
-
-  # Support Ruby 2.4.0+'s changes in a way that doesn't require dynamically
-  # modifying ROS.
-  #
-  # TODO: Once we care less about Rubies before 2.4.0, reverse this so that
-  # new_ostruct_member points to our version and not OpenStruct's.
-  alias new_ostruct_member! new_ostruct_member
-  # new_ostruct_member! is private, but new_ostruct_member is not on OpenStruct in 2.4.0-rc1?!
-  private :new_ostruct_member!
 
   def delete_field(name)
     sym = _get_key_from_table_(name)
