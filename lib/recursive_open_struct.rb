@@ -76,11 +76,19 @@ class RecursiveOpenStruct < OpenStruct
     @table.key?(mname) || super
   end
 
+  # Continue supporting older rubies -- JRuby 9.1.x.x is still considered
+  # stable, but is based on Ruby
+  # 2.3.x and so uses :modifiable instead of :modifiable?. Furthermore, if
+  # :modifiable is private, then make :modifiable? private too.
+  if !OpenStruct.private_instance_methods.include?(:modifiable?)
+    alias_method :modifiable?, :modifiable
+    if OpenStruct.private_instance_methods.include?(:modifiable)
+      private :modifiable?
+    end
+  end
+
   # Adapted implementation of method_missing to accommodate the differences
   # between ROS and OS.
-  #
-  # TODO: Use modifiable? instead of modifiable, and new_ostruct_member!
-  # instead of new_ostruct_member once we care less about Rubies before 2.4.0.
   def method_missing(mid, *args)
     len = args.length
     if mid =~ /^(.*)=$/
