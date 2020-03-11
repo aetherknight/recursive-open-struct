@@ -24,6 +24,7 @@ matrix:
     - rvm: 2.0.0
     - rvm: 2.1.10
     - rvm: 2.2.10
+    - rvm: 2.3.8
     - rvm: jruby-19mode
     # Future
     - rvm: ruby-head
