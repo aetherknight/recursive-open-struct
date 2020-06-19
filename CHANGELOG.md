@@ -1,3 +1,13 @@
+1.1.1 / 2020/03/10
+==================
+
+* FIX [#64](https://github.com/aetherknight/recursive-open-struct/pull/64):
+  Pirate Praveen: Support Ruby 2.7.0. `OpenStruct#modifiable` support was
+  finally dropped, and has to be replaced with `OpenStruct#modifiable?`.
+* Made some additional changes to continue supporting pre-2.4.x Rubies,
+  including the current stable JRuby (9.1.x.x, which tracks Ruby 2.3.x for
+  features)
+
 1.1.0 / 2018-02-03
 ==================
 

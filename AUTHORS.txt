@@ -1,8 +1,10 @@
 Recursive-open-struct was written by these fine people:
 
+* Ben Langfeld <ben@langfeld.me>
 * Beni Cherniavsky-Paskin <cben@redhat.com>
 * Cédric Felizard <cedric@felizard.fr>
 * Edward Betts <edward@4angle.com>
+* Ewoud Kohl van Wijngaarden <ewoud@kohlvanwijngaarden.nl>
 * Federico Aloi <federico.aloi@gmail.com>
 * fervic <roberto@runawaybit.com>
 * Joe Rafaniello <jrafanie@redhat.com>
@@ -12,6 +14,7 @@ Recursive-open-struct was written by these fine people:
 * Offirmo <offirmo.net@gmail.com>
 * Pedro Sena <sena.pedro@gmail.com>
 * Peter Yeremenko <peter.yeremenko@gmail.com>
+* Pirate Praveen <praveen@debian.org>
 * Sebastian Gaul <sebastian@mgvmedia.com>
 * Thiago Guimaraes <thiagogsr@gmail.com>
 * Tom Chapin <tchapin@gmail.com>
