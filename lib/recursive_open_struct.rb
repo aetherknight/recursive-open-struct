@@ -3,7 +3,6 @@ require 'recursive_open_struct/version'
 
 require 'recursive_open_struct/debug_inspect'
 require 'recursive_open_struct/deep_dup'
-require 'recursive_open_struct/ruby_19_backport'
 require 'recursive_open_struct/dig'
 
 # TODO: When we care less about Rubies before 2.4.0, match OpenStruct's method
@@ -14,23 +13,28 @@ require 'recursive_open_struct/dig'
 # `#to_h`.
 
 class RecursiveOpenStruct < OpenStruct
-  include Ruby19Backport if RUBY_VERSION =~ /\A1.9/
   include Dig if OpenStruct.public_instance_methods.include? :dig
 
   # TODO: deprecated, possibly remove or make optional an runtime so that it
   # doesn't normally pollute the public method namespace
   include DebugInspect
 
-  def initialize(hash=nil, args={})
-    hash ||= {}
-    @recurse_over_arrays = args.fetch(:recurse_over_arrays, false)
-    @preserve_original_keys = args.fetch(:preserve_original_keys, false)
-    @deep_dup = DeepDup.new(
-      recurse_over_arrays: @recurse_over_arrays,
-      preserve_original_keys: @preserve_original_keys
-    )
+  def self.default_options
+    {
+      mutate_input_hash: false,
+      recurse_over_arrays: false,
+      preserve_original_keys: false
+    }
+  end
 
-    @table = args.fetch(:mutate_input_hash, false) ? hash : @deep_dup.call(hash)
+  def initialize(hash=nil, passed_options={})
+    hash ||= {}
+
+    @options = self.class.default_options.merge!(passed_options).freeze
+
+    @deep_dup = DeepDup.new(@options)
+
+    @table = @options[:mutate_input_hash] ? hash : @deep_dup.call(hash)
 
     @sub_elements = {}
   end
@@ -56,18 +60,20 @@ class RecursiveOpenStruct < OpenStruct
     key_name = _get_key_from_table_(name)
     v = @table[key_name]
     if v.is_a?(Hash)
-      @sub_elements[key_name] ||= self.class.new(
-        v,
-        recurse_over_arrays: @recurse_over_arrays,
-        preserve_original_keys: @preserve_original_keys,
-        mutate_input_hash: true
-      )
-    elsif v.is_a?(Array) and @recurse_over_arrays
+      @sub_elements[key_name] ||= _create_sub_element_(v, mutate_input_hash: true)
+    elsif v.is_a?(Array) and @options[:recurse_over_arrays]
       @sub_elements[key_name] ||= recurse_over_array(v)
       @sub_elements[key_name] = recurse_over_array(@sub_elements[key_name])
     else
       v
     end
+  end
+
+  def []=(name, value)
+    key_name = _get_key_from_table_(name)
+    tbl = modifiable?  # Ensure we are modifiable
+    @sub_elements.delete(key_name)
+    tbl[key_name] = value
   end
 
   # Makes sure ROS responds as expected on #respond_to? and #method requests
@@ -95,13 +101,16 @@ class RecursiveOpenStruct < OpenStruct
       if len != 1
         raise ArgumentError, "wrong number of arguments (#{len} for 1)", caller(1)
       end
-      modifiable?[new_ostruct_member!($1.to_sym)] = args[0]
+      # self[$1.to_sym] = args[0]
+      # modifiable?[new_ostruct_member!($1.to_sym)] = args[0]
+      new_ostruct_member!($1.to_sym)
+      public_send(mid, args[0])
     elsif len == 0
       key = mid
       key = $1 if key =~ /^(.*)_as_a_hash$/
       if @table.key?(_get_key_from_table_(key))
         new_ostruct_member!(key)
-        send(mid)
+        public_send(mid)
       end
     else
       err = NoMethodError.new "undefined method `#{mid}' for #{self}", mid, args
@@ -120,8 +129,7 @@ class RecursiveOpenStruct < OpenStruct
           self[key_name]
         end
         define_method("#{name}=") do |x|
-          @sub_elements.delete(key_name)
-          modifiable?[key_name] = x
+          self[key_name] = x
         end
         define_method("#{name}_as_a_hash") { @table[key_name] }
       end
@@ -141,8 +149,8 @@ class RecursiveOpenStruct < OpenStruct
   def delete_field(name)
     sym = _get_key_from_table_(name)
     singleton_class.__send__(:remove_method, sym, "#{sym}=") rescue NoMethodError # ignore if methods not yet generated.
-    @sub_elements.delete sym
-    @table.delete sym
+    @sub_elements.delete(sym)
+    @table.delete(sym)
   end
 
   private
@@ -153,11 +161,14 @@ class RecursiveOpenStruct < OpenStruct
     name
   end
 
+  def _create_sub_element_(hash, **overrides)
+    self.class.new(hash, @options.merge(overrides))
+  end
+
   def recurse_over_array(array)
     array.each_with_index do |a, i|
       if a.is_a? Hash
-        array[i] = self.class.new(a, :recurse_over_arrays => true,
-          :mutate_input_hash => true, :preserve_original_keys => @preserve_original_keys)
+        array[i] = _create_sub_element_(a, mutate_input_hash: true, recurse_over_arrays: true)
       elsif a.is_a? Array
         array[i] = recurse_over_array a
       end

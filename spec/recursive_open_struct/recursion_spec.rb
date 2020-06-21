@@ -28,6 +28,15 @@ describe RecursiveOpenStruct do
       expect(subject.blah_as_a_hash).to eq({ :another => 'value' })
     end
 
+    it "handles sub-element replacement with dotted notation before member setup" do
+      expect(ros[:blah][:another]).to eql 'value'
+      expect(ros.methods).not_to include(:blah)
+
+      ros.blah = { changed: 'backing' }
+
+      expect(ros.blah.changed).to eql 'backing'
+    end
+
     describe "handling loops in the original Hashes" do
       let(:h1) { { :a => 'a'} }
       let(:h2) { { :a => 'b', :h1 => h1 } }
@@ -53,6 +62,34 @@ describe RecursiveOpenStruct do
       ros.blah.blargh = "Janet"
 
       expect(ros.blah.blargh).to eq "Janet"
+    end
+
+    describe 'subscript mutation notation' do
+      it 'handles the basic case' do
+        subject[:blah] = 12345
+        expect(subject.blah).to eql 12345
+      end
+
+      it 'recurses properly' do
+        subject[:blah][:another] = 'abc'
+        expect(subject.blah.another).to eql 'abc'
+        expect(subject.blah_as_a_hash).to eql({ :another => 'abc' })
+      end
+
+      let(:diff){ { :different => 'thing' } }
+
+      it 'can replace the entire hash' do
+        expect(subject.to_h).to eql(h)
+        subject[:blah] = diff
+        expect(subject.to_h).to eql({ :blah => diff })
+      end
+
+      it 'updates sub-element cache' do
+        expect(subject.blah.different).to be_nil
+        subject[:blah] = diff
+        expect(subject.blah.different).to eql 'thing'
+        expect(subject.blah_as_a_hash).to eql(diff)
+      end
     end
 
     context "after a sub-element has been modified" do
