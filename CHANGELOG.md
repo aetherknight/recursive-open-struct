@@ -1,3 +1,12 @@
+1.1.2 / 2020/06/20
+==================
+
+* FIX [#58](https://github.com/aetherknight/recursive-open-struct/pull/58):
+  David Feldman: Fix `[]=` so that it properly updates sub-elements
+* [#58](https://github.com/aetherknight/recursive-open-struct/pull/58):
+  David Feldman: Make the default options configurable at the class level to
+  simplify adding additional options in subclasses
+
 1.1.1 / 2020/03/10
 ==================
 
