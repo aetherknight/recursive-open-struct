@@ -31,7 +31,9 @@ describe RecursiveOpenStruct do
     it "handles sub-element replacement with dotted notation before member setup" do
       expect(ros[:blah][:another]).to eql 'value'
       expect(ros.methods).not_to include(:blah)
+
       ros.blah = { changed: 'backing' }
+
       expect(ros.blah.changed).to eql 'backing'
     end
 

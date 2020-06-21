@@ -70,11 +70,10 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def []=(name, value)
-    modifiable do |tbl|
-      key_name = _get_key_from_table_(name)
-      @sub_elements.delete(key_name)
-      tbl[key_name] = value
-    end
+    key_name = _get_key_from_table_(name)
+    tbl = modifiable?  # Ensure we are modifiable
+    @sub_elements.delete(key_name)
+    tbl[key_name] = value
   end
 
   # Makes sure ROS responds as expected on #respond_to? and #method requests
@@ -102,13 +101,16 @@ class RecursiveOpenStruct < OpenStruct
       if len != 1
         raise ArgumentError, "wrong number of arguments (#{len} for 1)", caller(1)
       end
-      modifiable?[new_ostruct_member!($1.to_sym)] = args[0]
+      # self[$1.to_sym] = args[0]
+      # modifiable?[new_ostruct_member!($1.to_sym)] = args[0]
+      new_ostruct_member!($1.to_sym)
+      public_send(mid, args[0])
     elsif len == 0
       key = mid
       key = $1 if key =~ /^(.*)_as_a_hash$/
       if @table.key?(_get_key_from_table_(key))
         new_ostruct_member!(key)
-        send(mid)
+        public_send(mid)
       end
     else
       err = NoMethodError.new "undefined method `#{mid}' for #{self}", mid, args
@@ -127,8 +129,7 @@ class RecursiveOpenStruct < OpenStruct
           self[key_name]
         end
         define_method("#{name}=") do |x|
-          @sub_elements.delete(key_name)
-          modifiable?[key_name] = x
+          self[key_name] = x
         end
         define_method("#{name}_as_a_hash") { @table[key_name] }
       end
@@ -148,15 +149,8 @@ class RecursiveOpenStruct < OpenStruct
   def delete_field(name)
     sym = _get_key_from_table_(name)
     singleton_class.__send__(:remove_method, sym, "#{sym}=") rescue NoMethodError # ignore if methods not yet generated.
-    @sub_elements.delete sym
-    @table.delete sym
-  end
-
-  protected
-
-  # TODO: Use modifiable? instead of modifiable once we care less about Rubies before 2.4.0.
-  def modifiable
-    block_given? ? yield(super) : super
+    @sub_elements.delete(sym)
+    @table.delete(sym)
   end
 
   private
