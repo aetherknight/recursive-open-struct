@@ -1,18 +1,17 @@
 ---
 language: ruby
 rvm:
-  # No longer supported
-  # - 1.9.3  # json gem now requires Ruby ~> 2.0
+  # No longer supported (but test anyways)
   - 2.0.0
   - 2.1.10
   - 2.2.10
   - jruby-19mode
-  # Current stable supported by Travis
   - 2.3.8
-  - 2.4.9
-  - 2.5.7
-  - 2.6.5
-  - 2.7.0
+  - 2.4.10
+  # Current stable supported by Travis
+  - 2.5.8
+  - 2.6.6
+  - 2.7.1
   - jruby-9.1.9.0
   # Future
   - ruby-head
@@ -25,6 +24,7 @@ matrix:
     - rvm: 2.1.10
     - rvm: 2.2.10
     - rvm: 2.3.8
+    - rvm: 2.4.10
     - rvm: jruby-19mode
     # Future
     - rvm: ruby-head
