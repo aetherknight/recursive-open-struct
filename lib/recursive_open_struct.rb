@@ -170,7 +170,11 @@ class RecursiveOpenStruct < OpenStruct
 
   unless OpenStruct.public_instance_methods.include?(:initialize_copy)
     def initialize_dup(orig)
-      initialize(orig.to_hash, orig.instance_variable_get(:@options))
+      super
+      # deep copy the table to separate the two objects
+      @table = @deep_dup.call(@table)
+      # Forget any memoized sub-elements
+      @sub_elements = {}
     end
   end
 
