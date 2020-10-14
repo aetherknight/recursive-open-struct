@@ -16,6 +16,7 @@ rvm:
   # Future
   - ruby-head
   - jruby-head
+  - truffleruby-head
 sudo: false
 matrix:
   allow_failures:
@@ -29,3 +30,4 @@ matrix:
     # Future
     - rvm: ruby-head
     - rvm: jruby-head
+    - rvm: truffleruby-head
