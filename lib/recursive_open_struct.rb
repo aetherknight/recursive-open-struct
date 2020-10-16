@@ -39,13 +39,16 @@ class RecursiveOpenStruct < OpenStruct
     @sub_elements = {}
   end
 
-  def initialize_copy(orig)
-    super
 
-    # deep copy the table to separate the two objects
-    @table = @deep_dup.call(orig.instance_variable_get(:@table))
-    # Forget any memoized sub-elements
-    @sub_elements = {}
+  if OpenStruct.public_instance_methods.include?(:initialize_copy)
+    def initialize_copy(orig)
+      super
+
+      # deep copy the table to separate the two objects
+      @table = @deep_dup.call(@table)
+      # Forget any memoized sub-elements
+      @sub_elements = {}
+    end
   end
 
   def to_h
@@ -55,6 +58,19 @@ class RecursiveOpenStruct < OpenStruct
   # TODO: deprecated, unsupported by OpenStruct. OpenStruct does not consider
   # itself to be a "kind of" Hash.
   alias_method :to_hash, :to_h
+
+  # Continue supporting older rubies -- JRuby 9.1.x.x is still considered
+  # stable, but is based on Ruby
+  # 2.3.x and so uses :modifiable instead of :modifiable?. Furthermore, if
+  # :modifiable is private, then make :modifiable? private too.
+  if !OpenStruct.private_instance_methods.include?(:modifiable?)
+    if OpenStruct.private_instance_methods.include?(:modifiable)
+      alias_method :modifiable?, :modifiable
+    elsif OpenStruct.public_instance_methods.include?(:modifiable)
+      alias_method :modifiable?, :modifiable
+      private :modifiable?
+    end
+  end
 
   def [](name)
     key_name = _get_key_from_table_(name)
@@ -69,28 +85,25 @@ class RecursiveOpenStruct < OpenStruct
     end
   end
 
-  def []=(name, value)
-    key_name = _get_key_from_table_(name)
-    tbl = modifiable?  # Ensure we are modifiable
-    @sub_elements.delete(key_name)
-    tbl[key_name] = value
+  if private_instance_methods.include?(:modifiable?) || public_instance_methods.include?(:modifiable?)
+    def []=(name, value)
+      key_name = _get_key_from_table_(name)
+      tbl = modifiable?  # Ensure we are modifiable
+      @sub_elements.delete(key_name)
+      tbl[key_name] = value
+    end
+  else
+    def []=(name, value)
+      key_name = _get_key_from_table_(name)
+      @table[key_name] = value # raises if self is frozen in Ruby 3.0
+      @sub_elements.delete(key_name)
+    end
   end
 
   # Makes sure ROS responds as expected on #respond_to? and #method requests
   def respond_to_missing?(mid, include_private = false)
     mname = _get_key_from_table_(mid.to_s.chomp('=').chomp('_as_a_hash'))
     @table.key?(mname) || super
-  end
-
-  # Continue supporting older rubies -- JRuby 9.1.x.x is still considered
-  # stable, but is based on Ruby
-  # 2.3.x and so uses :modifiable instead of :modifiable?. Furthermore, if
-  # :modifiable is private, then make :modifiable? private too.
-  if !OpenStruct.private_instance_methods.include?(:modifiable?)
-    alias_method :modifiable?, :modifiable
-    if OpenStruct.private_instance_methods.include?(:modifiable)
-      private :modifiable?
-    end
   end
 
   # Adapted implementation of method_missing to accommodate the differences
@@ -154,6 +167,16 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   private
+
+  unless OpenStruct.public_instance_methods.include?(:initialize_copy)
+    def initialize_dup(orig)
+      super
+      # deep copy the table to separate the two objects
+      @table = @deep_dup.call(@table)
+      # Forget any memoized sub-elements
+      @sub_elements = {}
+    end
+  end
 
   def _get_key_from_table_(name)
     return name.to_s if @table.has_key?(name.to_s)
