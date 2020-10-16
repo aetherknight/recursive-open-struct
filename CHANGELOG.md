@@ -1,3 +1,13 @@
+1.1.3 / 2020/10/15
+==================
+
+* No longer officially supporting Ruby 2.4.x, but compatiblity continues.
+* [#68](https://github.com/aetherknight/recursive-open-struct/pull/68): Igor
+  Victor: Add truffleruby-head to travis
+* FIX [#67](https://github.com/aetherknight/recursive-open-struct/pull/67):
+  Jean Boussier: Support upstream changes to OpenStruct in ruby-head (Ruby
+  3.0.0-dev)
+
 1.1.2 / 2020/06/20
 ==================
 
