@@ -41,6 +41,7 @@ class RecursiveOpenStruct < OpenStruct
 
   def marshal_load(attributes)
     hash, @options = attributes
+    @deep_dup = DeepDup.new(@options)
     @sub_elements = {}
     super(hash)
   end
