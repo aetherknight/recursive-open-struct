@@ -40,12 +40,13 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def marshal_load(attributes)
-    hash, @options, @sub_elements = attributes
+    hash, @options = attributes
+    @sub_elements = {}
     super(hash)
   end
 
   def marshal_dump
-    [super, @options, @sub_elements]
+    [super, @options]
   end
 
   if OpenStruct.public_instance_methods.include?(:initialize_copy)
