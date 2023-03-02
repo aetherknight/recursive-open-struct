@@ -116,7 +116,7 @@ describe RecursiveOpenStruct do
         ros.freeze
       end
 
-      it "can read existing keys", pending: 'Awaiting fix' do
+      it "can read existing keys" do
         expect(ros.asdf).to eq 'John Smith'
       end
 
@@ -126,6 +126,22 @@ describe RecursiveOpenStruct do
 
       it "cannot write existing keys" do
         expect { ros.asdf = 'new_value' }.to raise_error FrozenError
+      end
+
+      context "with recursive structure" do
+        let(:hash) { { :key => { :subkey => 42 } } }
+
+        it "can read existing sub-elements" do
+          expect(ros.key.subkey).to eq 42
+        end
+
+        it "can write new sub-elements" do
+          expect { ros.key.new_subkey = 43 }.not_to raise_error
+        end
+
+        it "can write existing sub-elements" do
+          expect { ros.key.subkey = 43 }.not_to raise_error
+        end
       end
     end
   end # describe behavior it inherits from OpenStruct
