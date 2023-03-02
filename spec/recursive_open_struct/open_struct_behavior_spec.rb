@@ -108,5 +108,41 @@ describe RecursiveOpenStruct do
         it { expect(subject.methods.map(&:to_sym)).to_not include :asdf= }
       end # describe #methods
     end # describe handling of arbitrary attributes
+
+    describe "handling of freezing" do
+      let(:hash) { { :asdf => 'John Smith' } }
+
+      before do
+        ros.freeze
+      end
+
+      it "can read existing keys" do
+        expect(ros.asdf).to eq 'John Smith'
+      end
+
+      it "cannot write new keys" do
+        expect { ros.new_key = 'new_value' }.to raise_error FrozenError
+      end
+
+      it "cannot write existing keys" do
+        expect { ros.asdf = 'new_value' }.to raise_error FrozenError
+      end
+
+      context "with recursive structure" do
+        let(:hash) { { :key => { :subkey => 42 } } }
+
+        it "can read existing sub-elements" do
+          expect(ros.key.subkey).to eq 42
+        end
+
+        it "can write new sub-elements" do
+          expect { ros.key.new_subkey = 43 }.not_to raise_error
+        end
+
+        it "can write existing sub-elements" do
+          expect { ros.key.subkey = 43 }.not_to raise_error
+        end
+      end
+    end
   end # describe behavior it inherits from OpenStruct
 end
