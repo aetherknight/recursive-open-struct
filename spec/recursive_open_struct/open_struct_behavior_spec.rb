@@ -108,5 +108,25 @@ describe RecursiveOpenStruct do
         it { expect(subject.methods.map(&:to_sym)).to_not include :asdf= }
       end # describe #methods
     end # describe handling of arbitrary attributes
+
+    describe "handling of freezing" do
+      let(:hash) { { :asdf => 'John Smith' } }
+
+      before do
+        ros.freeze
+      end
+
+      it "can read existing keys", pending: 'Awaiting fix' do
+        expect(ros.asdf).to eq 'John Smith'
+      end
+
+      it "cannot write new keys" do
+        expect { ros.new_key = 'new_value' }.to raise_error FrozenError
+      end
+
+      it "cannot write existing keys" do
+        expect { ros.asdf = 'new_value' }.to raise_error FrozenError
+      end
+    end
   end # describe behavior it inherits from OpenStruct
 end
