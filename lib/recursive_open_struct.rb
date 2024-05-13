@@ -23,7 +23,8 @@ class RecursiveOpenStruct < OpenStruct
     {
       mutate_input_hash: false,
       recurse_over_arrays: false,
-      preserve_original_keys: false
+      preserve_original_keys: false,
+      raise_on_missing: false
     }
   end
 
@@ -124,6 +125,10 @@ class RecursiveOpenStruct < OpenStruct
       if @table.key?(_get_key_from_table_(key))
         new_ostruct_member!(key)
         public_send(mid)
+      elsif @options[:raise_on_missing]
+        err = NoMethodError.new "undefined method `#{mid}' for #{self}", mid, args
+        err.set_backtrace caller(1)
+        raise err
       end
     else
       err = NoMethodError.new "undefined method `#{mid}' for #{self}", mid, args
