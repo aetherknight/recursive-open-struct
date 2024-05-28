@@ -89,7 +89,7 @@ describe RecursiveOpenStruct do
 
     context "hash" do
       it "calculates table hash" do
-        expect(ros.hash).to be ros.instance_variable_get('@table').hash
+        expect(ros.hash).to eq(ros.instance_variable_get('@table').hash)
       end
 
     end
