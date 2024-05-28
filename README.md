@@ -62,6 +62,23 @@ ros = RecursiveOpenStruct.new(h, preserve_original_keys: true)
 ros.to_h # => { 'fear' => 'is', 'the' => 'mindkiller' }
 ```
 
+### Optional: Raise error on missing attribute
+
+This option allows to raise an error if you try to call an attribute you didn't specify in hash
+
+```ruby
+h = { 'fear' => 'is', 'the' => 'mindkiller' } }
+ros = RecursiveOpenStruct.new(h, raise_on_missing: true)
+ros.undefined # => undefined method `undefined' for #<RecursiveOpenStruct fear="is", the="mindkiller">
+```
+
+The default behaviour returns nil
+
+```ruby
+h = { 'fear' => 'is', 'the' => 'mindkiller' } }
+ros = RecursiveOpenStruct.new(h)
+ros.undefined # => nil
+```
 
 ## Installation
 

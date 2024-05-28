@@ -160,6 +160,30 @@ describe RecursiveOpenStruct do
         end
       end
 
+      context 'when undefined method' do
+        context 'when raise_on_missing is enabled' do
+          subject(:recursive) { RecursiveOpenStruct.new(recursive_hash, raise_on_missing: true) }
+          let(:recursive_hash) { {:foo => [ {'bar' => [ { 'foo' => :bar} ] } ] } }
+
+          specify 'raises NoMethodError' do
+            expect {
+              recursive.undefined_method
+            }.to raise_error(NoMethodError)
+          end
+        end
+
+        context 'when raise_on_missing is disabled' do
+          context 'preserves the original keys' do
+            subject(:recursive) { RecursiveOpenStruct.new(recursive_hash) }
+            let(:recursive_hash) { {:foo => [ {'bar' => [ { 'foo' => :bar} ] } ] } }
+
+            specify 'returns nil' do
+              expect(recursive.undefined_method).to be_nil
+            end
+          end
+        end
+      end
+
     end
 
   end
