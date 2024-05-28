@@ -1,3 +1,13 @@
+1.2.0 / 2024/05/27
+==================
+
+* [#68](https://github.com/aetherknight/recursive-open-struct/pull/76):
+  IlyaUmanets: Add `raise_on_missing` option, causing ROS to raise
+  `NoMethodError` instead of returning `nil` if a field doesn't exist
+* MAINT: Switched to Github Actions for CI
+* MAINT: No longer officially supporting Ruby versions of 3.0.x or earlier,
+  updated CI to test 3.1.x, 3.2.x, 3.3.x
+
 1.1.3 / 2020/10/15
 ==================
 
