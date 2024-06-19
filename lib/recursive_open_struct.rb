@@ -137,6 +137,14 @@ class RecursiveOpenStruct < OpenStruct
     end
   end
 
+  def freeze
+    @table.each_key do |key|
+      new_ostruct_member!(key)
+    end
+
+    super
+  end
+
   # TODO: Rename to new_ostruct_member! once we care less about Rubies before
   # 2.4.0.
   def new_ostruct_member(name)
