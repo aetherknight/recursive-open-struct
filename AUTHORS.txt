@@ -19,6 +19,8 @@ Recursive-open-struct was written by these fine people:
 * Pedro Sena <sena.pedro@gmail.com>
 * Peter Yeremenko <peter.yeremenko@gmail.com>
 * Pirate Praveen <praveen@debian.org>
+* Richard Degenne <richard.degenne+github@gmail.com>
+* Richard Degenne <richard.degenne@gmail.com>
 * Sebastian Gaul <sebastian@mgvmedia.com>
 * Thiago Guimaraes <thiagogsr@gmail.com>
 * Tom Chapin <tchapin@gmail.com>
