@@ -1,3 +1,9 @@
+1.2.2 / 2024/06/18
+==================
+
+* [#75](https://github.com/aetherknight/recursive-open-struct/pull/75): Richard
+  Degenne: Fix Ruby 3.1 `#freeze`
+
 1.2.1 / 2024/05/27
 ==================
 
@@ -6,7 +12,7 @@
 1.2.0 / 2024/05/27
 ==================
 
-* [#68](https://github.com/aetherknight/recursive-open-struct/pull/76):
+* [#76](https://github.com/aetherknight/recursive-open-struct/pull/76):
   IlyaUmanets: Add `raise_on_missing` option, causing ROS to raise
   `NoMethodError` instead of returning `nil` if a field doesn't exist
 * MAINT: Switched to Github Actions for CI
