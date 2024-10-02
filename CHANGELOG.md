@@ -1,3 +1,12 @@
+1.3.0 / 2024/10/01
+==================
+
+* [#72](https://github.com/aetherknight/recursive-open-struct/pull/72): Maple
+  Ong: Better handle marshalling and dumping ROS
+* [#78](https://github.com/aetherknight/recursive-open-struct/pull/78): Hartley
+  McGuire: Add ostruct as a dependency since newer Ruby versions are going to
+  remove it
+
 1.2.2 / 2024/06/18
 ==================
 
