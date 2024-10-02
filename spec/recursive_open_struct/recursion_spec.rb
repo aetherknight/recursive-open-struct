@@ -37,6 +37,14 @@ describe RecursiveOpenStruct do
       expect(ros.blah.changed).to eql 'backing'
     end
 
+    it "handles being dump then loaded by Marshal" do
+      foo_struct = [RecursiveOpenStruct.new]
+      bar_struct = RecursiveOpenStruct.new(foo: foo_struct)
+      serialized = Marshal.dump(bar_struct)
+
+      expect(Marshal.load(serialized).foo).to eq(foo_struct)
+    end
+
     describe "handling loops in the original Hashes" do
       let(:h1) { { :a => 'a'} }
       let(:h2) { { :a => 'b', :h1 => h1 } }
@@ -181,6 +189,17 @@ describe RecursiveOpenStruct do
     describe 'recursing over arrays' do
       let(:blah_list) { [ { :foo => '1' }, { :foo => '2' }, 'baz' ] }
       let(:h) { { :blah => blah_list } }
+
+      context "when dump and loaded by Marshal" do
+        let(:test) { RecursiveOpenStruct.new(h, :recurse_over_arrays => true) }
+        subject { Marshal.load(Marshal.dump(test))}
+
+        it { expect(subject.blah.length).to eq 3 }
+        it { expect(subject.blah[0].foo).to eq '1' }
+        it { expect(subject.blah[1].foo).to eq '2' }
+        it { expect(subject.blah_as_a_hash).to eq blah_list }
+        it { expect(subject.blah[2]).to eq 'baz' }
+      end
 
       context "when recursing over arrays is enabled" do
         subject { RecursiveOpenStruct.new(h, :recurse_over_arrays => true) }

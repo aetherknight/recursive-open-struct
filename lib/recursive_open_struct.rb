@@ -40,6 +40,16 @@ class RecursiveOpenStruct < OpenStruct
     @sub_elements = {}
   end
 
+  def marshal_load(attributes)
+    hash, @options = attributes
+    @deep_dup = DeepDup.new(@options)
+    @sub_elements = {}
+    super(hash)
+  end
+
+  def marshal_dump
+    [super, @options]
+  end
 
   if OpenStruct.public_instance_methods.include?(:initialize_copy)
     def initialize_copy(orig)
