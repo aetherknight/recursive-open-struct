@@ -1,3 +1,11 @@
+1.3.1 / 2024/10/03
+==================
+
+* FIX for
+  [#79](https://github.com/aetherknight/recursive-open-struct/issues/79):
+  Revert #72's change to marshalling and dumping since it is an API-breaking
+  change. It will be re-added in a new major version after releasing a fix.
+
 1.3.0 / 2024/10/01
 ==================
 
