@@ -1,3 +1,9 @@
+2.0.0 / 2024/10/03
+==================
+
+* BREAKING: Restore #72, which is an API-breaking change because it changes
+  what data is serialized with marshalling.
+
 1.3.1 / 2024/10/03
 ==================
 
