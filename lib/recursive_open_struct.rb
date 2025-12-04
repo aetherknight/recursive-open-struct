@@ -29,6 +29,7 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def initialize(hash=nil, passed_options={})
+    hash = hash.to_h if [hash.is_a?(RecursiveOpenStruct), hash.is_a?(OpenStruct)].any?
     hash ||= {}
 
     @options = self.class.default_options.merge!(passed_options).freeze
