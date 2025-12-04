@@ -1,10 +1,12 @@
 # -*- encoding: utf-8 -*-
-
-require './lib/recursive_open_struct/version'
+name = "recursive-open-struct"
+version = File.foreach(File.join(__dir__, "lib", "recursive_open_struct", "version.rb")) do |line|
+  /^\s*VERSION\s*=\s*"(.*)"/ =~ line and break $1
+end
 
 Gem::Specification.new do |s|
-  s.name = "recursive-open-struct"
-  s.version = RecursiveOpenStruct::VERSION
+  s.name = name
+  s.version = version
   s.authors = ["William (B.J.) Snow Orvis"]
   s.email = "aetherknight@gmail.com"
   s.date = Time.now.utc.strftime("%Y-%m-%d")
