@@ -20,7 +20,7 @@ describe RecursiveOpenStruct do
 
     it 'can be inspected' do
       expect(ros.inspect).to \
-        eql('#<RecursiveOpenStruct blah={another: "value"}>')
+        match(/#<RecursiveOpenStruct blah={:?another(: |=>)"value"}>/)
     end
   end
 
@@ -42,7 +42,7 @@ describe RecursiveOpenStruct do
 
     it 'can be inspected' do
       expect(ros.inspect).to \
-        eql('#<RecursiveOpenStruct blah={another: "value"}>')
+        match(/#<RecursiveOpenStruct blah={:?another(: |=>)"value"}>/)
     end
   end
 
@@ -64,8 +64,7 @@ describe RecursiveOpenStruct do
     end
 
     it 'can be inspected' do
-      expect(ros.inspect).to \
-        end_with(' blah={another: "value"}>')
+      expect(ros.inspect).to match(/ blah={:?another(: |=>)"value"}>$/)
     end
   end
 end
