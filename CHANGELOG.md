@@ -1,3 +1,11 @@
+2.1.0 / 2025/12/05
+==================
+
+* [#80](https://github.com/aetherknight/recursive-open-struct/pull/80): Hermann
+  Mayer: Added a safety guard for double wrapping.
+* FIX: Avoid loading `ostruct` when processing the gemspec, since it is a
+  dependency and it may not be installed/available yet.
+
 2.0.0 / 2024/10/03
 ==================
 

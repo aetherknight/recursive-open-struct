@@ -9,6 +9,7 @@ Recursive-open-struct was written by these fine people:
 * Federico Aloi <federico.aloi@gmail.com>
 * fervic <roberto@runawaybit.com>
 * Hartley McGuire <skipkayhil@gmail.com>
+* Hermann Mayer <hermann.mayer92@gmail.com>
 * Igor Victor <gogainda@yandex.ru>
 * Ilya Umanets <ilya.umanets@sabiogroup.com>
 * Jean Boussier <jean.boussier@gmail.com>
@@ -21,11 +22,12 @@ Recursive-open-struct was written by these fine people:
 * Pedro Sena <sena.pedro@gmail.com>
 * Peter Yeremenko <peter.yeremenko@gmail.com>
 * Pirate Praveen <praveen@debian.org>
-* Richard Degenne <richard.degenne+github@gmail.com>
 * Richard Degenne <richard.degenne@gmail.com>
+* Richard Degenne <richard.degenne+github@gmail.com>
 * Sebastian Gaul <sebastian@mgvmedia.com>
 * Thiago Guimaraes <thiagogsr@gmail.com>
 * Tom Chapin <tchapin@gmail.com>
 * Victor Guzman <victor.guzman@runawaybit.com>
 * William (B.J.) Snow Orvis <aetherknight@gmail.com>
+* Wynn (B.J.) Snow Orvis <aetherkn@aedifice.org>
 * Wynn (B.J.) Snow Orvis <aetherknight@gmail.com>
