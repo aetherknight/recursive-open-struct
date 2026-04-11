@@ -27,8 +27,7 @@ Gem::Specification.new do |s|
         ros.a_as_a_hash # { :b => 'c' }
     QUOTE
 
-  s.files = `git ls-files`.split("\n")
-  s.test_files = `git ls-files spec`.split("\n")
+  s.files = `git ls-files lib`.split("\n") + ["AUTHORS.txt" , "CHANGELOG.md", "LICENSE.txt", "README.md"]
   s.require_paths = ["lib"]
   s.extra_rdoc_files = [
     "CHANGELOG.md",
@@ -45,4 +44,3 @@ Gem::Specification.new do |s|
 
   s.add_dependency('ostruct')
 end
-
