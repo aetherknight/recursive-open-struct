@@ -38,6 +38,7 @@ end
 
 task default: %i[spec rubocop]
 
+desc 'Ensure all files have appropriate permissions before building a package'
 task :fix_permissions do
   File.umask 0o022
   filelist = `git ls-files`.split("\n")
