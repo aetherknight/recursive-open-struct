@@ -23,6 +23,9 @@ namespace :spec do
   end
 end
 
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new
+
 require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
@@ -33,7 +36,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-task :default => :spec
+task :default => [:spec, :rubocop]
 
 task :fix_permissions do
   File.umask 0022
