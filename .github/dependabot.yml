@@ -4,7 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "quarterly"
-  - package-ecosystem: "bundler"
-    directory: "/"
-    schedule:
-      interval: "quarterly"
+  # TODO: the bundler dependency updater doesn't seem to handle the Gemfile
+  # using the gemspec? Figure this out and re-enable, if possible
+  # - package-ecosystem: "bundler"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "quarterly"
