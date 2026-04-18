@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ostruct'
 require 'recursive_open_struct/version'
 
@@ -12,6 +14,7 @@ require 'recursive_open_struct/dig'
 # TODO: `#*_as_a_hash` deprecated. Nested hashes can be referenced using
 # `#to_h`.
 
+# rubocop:disable Metrics/ClassLength
 class RecursiveOpenStruct < OpenStruct
   include Dig if OpenStruct.public_instance_methods.include? :dig
 
@@ -28,7 +31,9 @@ class RecursiveOpenStruct < OpenStruct
     }
   end
 
-  def initialize(hash=nil, passed_options={})
+  # rubocop:disable Lint/MissingSuper
+  # Intentionally doesn't call super and initializes +@table+ itself.
+  def initialize(hash = nil, passed_options = {})
     hash = hash.to_h if [hash.is_a?(RecursiveOpenStruct), hash.is_a?(OpenStruct)].any?
     hash ||= {}
 
@@ -40,6 +45,7 @@ class RecursiveOpenStruct < OpenStruct
 
     @sub_elements = {}
   end
+  # rubocop:enable Lint/MissingSuper
 
   def marshal_load(attributes)
     hash, @options = attributes
@@ -69,17 +75,17 @@ class RecursiveOpenStruct < OpenStruct
 
   # TODO: deprecated, unsupported by OpenStruct. OpenStruct does not consider
   # itself to be a "kind of" Hash.
-  alias_method :to_hash, :to_h
+  alias to_hash to_h
 
   # Continue supporting older rubies -- JRuby 9.1.x.x is still considered
   # stable, but is based on Ruby
   # 2.3.x and so uses :modifiable instead of :modifiable?. Furthermore, if
   # :modifiable is private, then make :modifiable? private too.
-  if !OpenStruct.private_instance_methods.include?(:modifiable?)
+  unless OpenStruct.private_instance_methods.include?(:modifiable?)
     if OpenStruct.private_instance_methods.include?(:modifiable)
-      alias_method :modifiable?, :modifiable
+      alias modifiable? modifiable
     elsif OpenStruct.public_instance_methods.include?(:modifiable)
-      alias_method :modifiable?, :modifiable
+      alias modifiable? modifiable
       private :modifiable?
     end
   end
@@ -89,7 +95,7 @@ class RecursiveOpenStruct < OpenStruct
     v = @table[key_name]
     if v.is_a?(Hash)
       @sub_elements[key_name] ||= _create_sub_element_(v, mutate_input_hash: true)
-    elsif v.is_a?(Array) and @options[:recurse_over_arrays]
+    elsif v.is_a?(Array) && @options[:recurse_over_arrays]
       @sub_elements[key_name] ||= recurse_over_array(v)
       @sub_elements[key_name] = recurse_over_array(@sub_elements[key_name])
     else
@@ -100,7 +106,7 @@ class RecursiveOpenStruct < OpenStruct
   if private_instance_methods.include?(:modifiable?) || public_instance_methods.include?(:modifiable?)
     def []=(name, value)
       key_name = _get_key_from_table_(name)
-      tbl = modifiable?  # Ensure we are modifiable
+      tbl = modifiable? # Ensure we are modifiable
       @sub_elements.delete(key_name)
       tbl[key_name] = value
     end
@@ -120,19 +126,20 @@ class RecursiveOpenStruct < OpenStruct
 
   # Adapted implementation of method_missing to accommodate the differences
   # between ROS and OS.
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/PerceivedComplexity
   def method_missing(mid, *args)
     len = args.length
     if mid =~ /^(.*)=$/
-      if len != 1
-        raise ArgumentError, "wrong number of arguments (#{len} for 1)", caller(1)
-      end
+      raise ArgumentError, "wrong number of arguments (#{len} for 1)", caller(1) if len != 1
+
       # self[$1.to_sym] = args[0]
       # modifiable?[new_ostruct_member!($1.to_sym)] = args[0]
-      new_ostruct_member!($1.to_sym)
+      new_ostruct_member!(::Regexp.last_match(1).to_sym)
       public_send(mid, args[0])
-    elsif len == 0
+    elsif len.zero?
       key = mid
-      key = $1 if key =~ /^(.*)_as_a_hash$/
+      key = ::Regexp.last_match(1) if key =~ /^(.*)_as_a_hash$/
       if @table.key?(_get_key_from_table_(key))
         new_ostruct_member!(key)
         public_send(mid)
@@ -147,6 +154,8 @@ class RecursiveOpenStruct < OpenStruct
       raise err
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/AbcSize
 
   def freeze
     @table.each_key do |key|
@@ -160,7 +169,7 @@ class RecursiveOpenStruct < OpenStruct
   # 2.4.0.
   def new_ostruct_member(name)
     key_name = _get_key_from_table_(name)
-    unless self.singleton_class.method_defined?(name.to_sym)
+    unless singleton_class.method_defined?(name.to_sym)
       class << self; self; end.class_eval do
         define_method(name) do
           self[key_name]
@@ -185,7 +194,12 @@ class RecursiveOpenStruct < OpenStruct
 
   def delete_field(name)
     sym = _get_key_from_table_(name)
-    singleton_class.__send__(:remove_method, sym, "#{sym}=") rescue NoMethodError # ignore if methods not yet generated.
+    begin
+      singleton_class.__send__(:remove_method, sym, "#{sym}=")
+    rescue StandardError
+      # ignore if methods not yet generated.
+      NoMethodError
+    end
     @sub_elements.delete(sym)
     @table.delete(sym)
   end
@@ -203,8 +217,9 @@ class RecursiveOpenStruct < OpenStruct
   end
 
   def _get_key_from_table_(name)
-    return name.to_s if @table.has_key?(name.to_s)
-    return name.to_sym if @table.has_key?(name.to_sym)
+    return name.to_s if @table.key?(name.to_s)
+    return name.to_sym if @table.key?(name.to_sym)
+
     name
   end
 
@@ -222,5 +237,5 @@ class RecursiveOpenStruct < OpenStruct
     end
     array
   end
-
 end
+# rubocop:enable Metrics/ClassLength

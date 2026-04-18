@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../spec_helper'
 require 'recursive_open_struct'
 
@@ -8,7 +10,7 @@ describe RecursiveOpenStruct do
   let(:new_symbol) { :foo }
 
   describe 'indifferent access' do
-    let(:hash) { {:foo => value, 'bar' => symbol} }
+    let(:hash) { { :foo => value, 'bar' => symbol } }
     let(:hash_ros_opts) { {} }
     subject(:hash_ros) { RecursiveOpenStruct.new(hash, hash_ros_opts) }
 
@@ -20,7 +22,6 @@ describe RecursiveOpenStruct do
       it('allows getting with method') { expect(subject.foo).to be value }
       it('allows getting with symbol') { expect(subject[:foo]).to be value }
       it('allows getting with string') { expect(subject['foo']).to be value }
-
     end
 
     context 'setting value with symbol' do
@@ -31,7 +32,6 @@ describe RecursiveOpenStruct do
       it('allows getting with method') { expect(subject.foo).to be value }
       it('allows getting with symbol') { expect(subject[:foo]).to be value }
       it('allows getting with string') { expect(subject['foo']).to be value }
-
     end
 
     context 'setting value with string' do
@@ -42,7 +42,6 @@ describe RecursiveOpenStruct do
       it('allows getting with method') { expect(subject.foo).to be value }
       it('allows getting with symbol') { expect(subject[:foo]).to be value }
       it('allows getting with string') { expect(subject['foo']).to be value }
-
     end
 
     context 'overwriting values' do
@@ -117,10 +116,10 @@ describe RecursiveOpenStruct do
       context 'when preserve_original_keys is not enabled' do
         context 'transforms original keys to symbols' do
           subject(:recursive) { RecursiveOpenStruct.new(recursive_hash, recurse_over_arrays: true) }
-          let(:recursive_hash) { {:foo => [ {'bar' => [ { 'foo' => :bar} ] } ] } }
-          let(:symbolized_recursive_hash) { {:foo => [ {:bar => [ { :foo => :bar} ] } ] } }
-          let(:symbolized_modified_hash) { {:foo => [ {:bar => [ { :foo => :foo} ] } ] } }
-          let(:symbolized_hash) { Hash[hash.map{|(k,v)| [k.to_sym,v]}] }
+          let(:recursive_hash) { { foo: [{ 'bar' => [{ 'foo' => :bar }] }] } }
+          let(:symbolized_recursive_hash) { { foo: [{ bar: [{ foo: :bar }] }] } }
+          let(:symbolized_modified_hash) { { foo: [{ bar: [{ foo: :foo }] }] } }
+          let(:symbolized_hash) { Hash[hash.map { |(k, v)| [k.to_sym, v] }] }
 
           specify 'after initialization' do
             expect(hash_ros.to_h).to eq symbolized_hash
@@ -139,11 +138,13 @@ describe RecursiveOpenStruct do
 
       context 'when preserve_original_keys is enabled' do
         context 'preserves the original keys' do
-          subject(:recursive) { RecursiveOpenStruct.new(recursive_hash, recurse_over_arrays: true, preserve_original_keys: true) }
-          let(:recursive_hash) { {:foo => [ {'bar' => [ { 'foo' => :bar} ] } ] } }
-          let(:modified_hash) { {:foo => [ {'bar' => [ { 'foo' => :foo} ] } ] } }
+          subject(:recursive) do
+            RecursiveOpenStruct.new(recursive_hash, recurse_over_arrays: true, preserve_original_keys: true)
+          end
+          let(:recursive_hash) { { foo: [{ 'bar' => [{ 'foo' => :bar }] }] } }
+          let(:modified_hash) { { foo: [{ 'bar' => [{ 'foo' => :foo }] }] } }
 
-          let(:hash_ros_opts) { { preserve_original_keys: true }}
+          let(:hash_ros_opts) { { preserve_original_keys: true } }
 
           specify 'after initialization' do
             expect(hash_ros.to_h).to eq hash
@@ -163,19 +164,19 @@ describe RecursiveOpenStruct do
       context 'when undefined method' do
         context 'when raise_on_missing is enabled' do
           subject(:recursive) { RecursiveOpenStruct.new(recursive_hash, raise_on_missing: true) }
-          let(:recursive_hash) { {:foo => [ {'bar' => [ { 'foo' => :bar} ] } ] } }
+          let(:recursive_hash) { { foo: [{ 'bar' => [{ 'foo' => :bar }] }] } }
 
           specify 'raises NoMethodError' do
-            expect {
+            expect do
               recursive.undefined_method
-            }.to raise_error(NoMethodError)
+            end.to raise_error(NoMethodError)
           end
         end
 
         context 'when raise_on_missing is disabled' do
           context 'preserves the original keys' do
             subject(:recursive) { RecursiveOpenStruct.new(recursive_hash) }
-            let(:recursive_hash) { {:foo => [ {'bar' => [ { 'foo' => :bar} ] } ] } }
+            let(:recursive_hash) { { foo: [{ 'bar' => [{ 'foo' => :bar }] }] } }
 
             specify 'returns nil' do
               expect(recursive.undefined_method).to be_nil
@@ -183,8 +184,6 @@ describe RecursiveOpenStruct do
           end
         end
       end
-
     end
-
   end
 end

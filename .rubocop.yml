@@ -10,3 +10,32 @@
 # See https://docs.rubocop.org/rubocop/configuration
 Layout/LineLength:
   Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*.rb"
+    - "*.gemspec"
+
+Metrics/MethodLength:
+  Enabled: false
+
+Naming/FileName:
+  Exclude:
+    # This file is deliberately named with dashes, to match the package name
+    - 'lib/recursive-open-struct.rb'
+
+Style/CommentedKeyword:
+  Exclude:
+    - "spec/**/*.rb"
+
+Style/Documentation:
+  Enabled: false
+
+# Can't really disable this in the gemspec file (it is reported on line 1, but
+# line 1 has the frozen string literal comment)
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+# TODO: should I set a required ruby version? At the moment, the project policy
+# is to officially support supported Ruby versions (and JRuby), but to not
+# officially support no-longer-maintained Ruby versions.
+

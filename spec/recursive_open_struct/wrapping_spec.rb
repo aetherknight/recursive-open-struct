@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative '../spec_helper'
 require 'recursive_open_struct'
 
 describe RecursiveOpenStruct do
   describe 'wrapping RecursiveOpenStruct' do
-    let(:h) { { :blah => { :another => 'value' } } }
+    let(:h) { { blah: { another: 'value' } } }
     subject(:ros) { RecursiveOpenStruct.new(RecursiveOpenStruct.new(h)) }
 
     it 'can convert the entire hash tree back into a hash' do
@@ -25,7 +27,7 @@ describe RecursiveOpenStruct do
   end
 
   describe 'wrapping OpenStruct' do
-    let(:h) { { :blah => { :another => 'value' } } }
+    let(:h) { { blah: { another: 'value' } } }
     subject(:ros) { RecursiveOpenStruct.new(OpenStruct.new(h)) }
 
     it 'can convert the entire hash tree back into a hash' do
@@ -47,7 +49,7 @@ describe RecursiveOpenStruct do
   end
 
   describe 'wrapping a subclass' do
-    let(:h) { { :blah => { :another => 'value' } } }
+    let(:h) { { blah: { another: 'value' } } }
     let(:subclass) { Class.new(RecursiveOpenStruct) }
     subject(:ros) { subclass.new(subclass.new(h)) }
 

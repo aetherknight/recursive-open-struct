@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 require 'rubygems'
 require 'bundler/gem_tasks'
@@ -9,16 +9,16 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
 end
 namespace :spec do
   if RUBY_VERSION =~ /^1\.8/
-    desc "Rspec code coverage (1.8.7)"
+    desc 'Rspec code coverage (1.8.7)'
     RSpec::Core::RakeTask.new(:coverage) do |spec|
       spec.pattern = 'spec/**/*_spec.rb'
       spec.rcov = true
     end
   else
-    desc "Rspec code coverage (1.9+)"
+    desc 'Rspec code coverage (1.9+)'
     task :coverage do
       ENV['COVERAGE'] = 'true'
-      Rake::Task["spec"].execute
+      Rake::Task['spec'].execute
     end
   end
 end
@@ -28,7 +28,7 @@ RuboCop::RakeTask.new
 
 require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
+  version = File.exist?('VERSION') ? File.read('VERSION') : ''
 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "recursive-open-struct #{version}"
@@ -36,28 +36,28 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-task :default => [:spec, :rubocop]
+task default: %i[spec rubocop]
 
 task :fix_permissions do
-  File.umask 0022
+  File.umask 0o022
   filelist = `git ls-files`.split("\n")
-  FileUtils.chmod 0644, filelist, :verbose => true
-  FileUtils.chmod 0755, ['lib','spec'], :verbose => true
+  FileUtils.chmod 0o644, filelist, verbose: true
+  FileUtils.chmod 0o755, %w[lib spec], verbose: true
 end
 
-desc "Update the AUTHORS.txt file"
+desc 'Update the AUTHORS.txt file'
 task :update_authors do
   authors = `git log --format="%aN <%aE>"|sort -f|uniq`
   File.open('AUTHORS.txt', 'w') do |f|
     f.write("Recursive-open-struct was written by these fine people:\n\n")
-    f.write(authors.split("\n").map { |a| "* #{a}" }.join( "\n" ))
+    f.write(authors.split("\n").map { |a| "* #{a}" }.join("\n"))
     f.write("\n")
   end
 end
 
-task :build => [:update_authors, :fix_permissions]
+task build: %i[update_authors fix_permissions]
 
-desc "Run an interactive pry shell with ros required"
+desc 'Run an interactive pry shell with ros required'
 task :pry do
-  sh "pry -I lib -r recursive-open-struct"
+  sh 'pry -I lib -r recursive-open-struct'
 end
