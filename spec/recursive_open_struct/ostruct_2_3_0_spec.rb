@@ -9,43 +9,45 @@ describe RecursiveOpenStruct do
     describe '#dig' do
       # We only care when Ruby supports `#dig`.
       if OpenStruct.public_instance_methods.include? :dig
-        context 'recurse_over_arrays: false' do
-          subject { RecursiveOpenStruct.new(a: { b: 2, c: ['doo', 'bee', { inner: 'one' }] }) }
+        context 'when recurse_over_arrays: false' do
+          subject(:ros) { described_class.new(a: { b: 2, c: ['doo', 'bee', { inner: 'one' }] }) }
 
           describe 'OpenStruct-like behavior' do
-            it { expect(subject.dig(:a, :b)).to eq 2 }
-            it { expect(subject.dig(:a, :c, 0)).to eq 'doo' }
-            it { expect(subject.dig(:a, :c, 2, :inner)).to eq 'one' }
+            it { expect(ros.dig(:a, :b)).to eq 2 }
+            it { expect(ros.dig(:a, :c, 0)).to eq 'doo' }
+            it { expect(ros.dig(:a, :c, 2, :inner)).to eq 'one' }
           end
 
           describe 'recursive behavior' do
             it {
-              expect(subject.dig(:a)).to eq RecursiveOpenStruct.new(
+              expect(ros.dig(:a)).to eq described_class.new(
                 { b: 2, c: ['doo', 'bee', { inner: 'one' }] }
               )
             }
-            it { expect(subject.dig(:a, :c, 2)).to eq({ inner: 'one' }) }
+
+            it { expect(ros.dig(:a, :c, 2)).to eq({ inner: 'one' }) }
           end
         end
 
-        context 'recurse_over_arrays: true' do
-          subject do
-            RecursiveOpenStruct.new({ a: { b: 2, c: ['doo', 'bee', { inner: 'one' }] } }, recurse_over_arrays: true)
+        context 'when recurse_over_arrays: true' do
+          subject(:ros) do
+            described_class.new({ a: { b: 2, c: ['doo', 'bee', { inner: 'one' }] } }, recurse_over_arrays: true)
           end
 
           describe 'OpenStruct-like behavior' do
-            it { expect(subject.dig(:a, :b)).to eq 2 }
-            it { expect(subject.dig(:a, :c, 0)).to eq 'doo' }
-            it { expect(subject.dig(:a, :c, 2, :inner)).to eq 'one' }
+            it { expect(ros.dig(:a, :b)).to eq 2 }
+            it { expect(ros.dig(:a, :c, 0)).to eq 'doo' }
+            it { expect(ros.dig(:a, :c, 2, :inner)).to eq 'one' }
           end
 
           describe 'recursive behavior' do
             it {
-              expect(subject.dig(:a)).to eq RecursiveOpenStruct.new(
+              expect(ros.dig(:a)).to eq described_class.new(
                 { b: 2, c: ['doo', 'bee', { inner: 'one' }] }
               )
             }
-            it { expect(subject.dig(:a, :c, 2)).to eq RecursiveOpenStruct.new(inner: 'one') }
+
+            it { expect(ros.dig(:a, :c, 2)).to eq described_class.new(inner: 'one') }
           end
         end
       end

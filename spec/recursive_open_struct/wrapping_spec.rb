@@ -5,15 +5,16 @@ require 'recursive_open_struct'
 
 describe RecursiveOpenStruct do
   describe 'wrapping RecursiveOpenStruct' do
+    subject(:ros) { described_class.new(described_class.new(h)) }
+
     let(:h) { { blah: { another: 'value' } } }
-    subject(:ros) { RecursiveOpenStruct.new(RecursiveOpenStruct.new(h)) }
 
     it 'can convert the entire hash tree back into a hash' do
       expect(ros.to_h).to eq h
     end
 
     it 'can access the flat keys' do
-      expect(ros.blah).to be_a(RecursiveOpenStruct)
+      expect(ros.blah).to be_a(described_class)
     end
 
     it 'can access the nested keys' do
@@ -27,15 +28,16 @@ describe RecursiveOpenStruct do
   end
 
   describe 'wrapping OpenStruct' do
+    subject(:ros) { described_class.new(OpenStruct.new(h)) }
+
     let(:h) { { blah: { another: 'value' } } }
-    subject(:ros) { RecursiveOpenStruct.new(OpenStruct.new(h)) }
 
     it 'can convert the entire hash tree back into a hash' do
       expect(ros.to_h).to eq h
     end
 
     it 'can access the flat keys' do
-      expect(ros.blah).to be_a(RecursiveOpenStruct)
+      expect(ros.blah).to be_a(described_class)
     end
 
     it 'can access the nested keys' do
@@ -49,16 +51,17 @@ describe RecursiveOpenStruct do
   end
 
   describe 'wrapping a subclass' do
-    let(:h) { { blah: { another: 'value' } } }
-    let(:subclass) { Class.new(RecursiveOpenStruct) }
     subject(:ros) { subclass.new(subclass.new(h)) }
+
+    let(:h) { { blah: { another: 'value' } } }
+    let(:subclass) { Class.new(described_class) }
 
     it 'can convert the entire hash tree back into a hash' do
       expect(ros.to_h).to eq h
     end
 
     it 'can access the flat keys' do
-      expect(ros.blah).to be_a(RecursiveOpenStruct)
+      expect(ros.blah).to be_a(described_class)
     end
 
     it 'can access the nested keys' do

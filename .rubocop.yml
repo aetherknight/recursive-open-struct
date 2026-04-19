@@ -10,6 +10,7 @@
 # See https://docs.rubocop.org/rubocop/configuration
 plugins:
   - 'rubocop-rake'
+  - 'rubocop-rspec'
 
 Layout/LineLength:
   Max: 120
@@ -42,3 +43,14 @@ Gemspec/RequiredRubyVersion:
 # is to officially support supported Ruby versions (and JRuby), but to not
 # officially support no-longer-maintained Ruby versions.
 
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+
+# Not sure why this one still fails -- the specs are all in a
+# recursive_open_struct directory.
+RSpec/SpecFilePathFormat:
+  Enabled: false
