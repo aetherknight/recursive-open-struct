@@ -31,3 +31,4 @@ Recursive-open-struct was written by these fine people:
 * William (B.J.) Snow Orvis <aetherknight@gmail.com>
 * Wynn (B.J.) Snow Orvis <aetherkn@aedifice.org>
 * Wynn (B.J.) Snow Orvis <aetherknight@gmail.com>
+* Yuri Zubov <yuri.zubov@cleverlabs.io>

@@ -1,3 +1,19 @@
+2.1.1 / 2026/04/18
+==================
+
+* MAINT: [#83](https://github.com/aetherknight/recursive-open-struct/pull/83):
+  Yuri Zubov: Reduce gem size by excluding test files
+
+* MAINT: [#82](https://github.com/aetherknight/recursive-open-struct/pull/82):
+  Enable CodeQL scanning
+* MAINT: [#84](https://github.com/aetherknight/recursive-open-struct/pull/84):
+  Add Ruby 4.0 to the testing matrix
+* MAINT: Configure Dependabot to update github actions dependencies, and let it
+  update action versions/pins
+* MAINT: [#87](https://github.com/aetherknight/recursive-open-struct/pull/87):
+  Add rubocop for autoformatting and linting, and address a lot of lints,
+  particularly around RSpec tests
+
 2.1.0 / 2025/12/05
 ==================
 
