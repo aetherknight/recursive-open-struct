@@ -36,14 +36,14 @@ Gem::Specification.new do |s|
     'README.md'
   ]
 
-  s.add_development_dependency('bundler', ['>= 0'])
+  s.add_development_dependency('bundler', ['>= 2'])
   s.add_development_dependency('pry', ['>= 0'])
-  s.add_development_dependency('rake', ['>= 0'])
-  s.add_development_dependency('rdoc', ['>= 0'])
-  s.add_development_dependency('rspec', '~> 3.2')
-  s.add_development_dependency('rubocop', ['>= 0'])
-  s.add_development_dependency('rubocop-rake', ['>= 0'])
-  s.add_development_dependency('rubocop-rspec', ['>= 0'])
+  s.add_development_dependency('rake', ['~>13.4'])
+  s.add_development_dependency('rdoc', ['~>7.2'])
+  s.add_development_dependency('rspec', '~> 3.13')
+  s.add_development_dependency('rubocop', ['~>1.86'])
+  s.add_development_dependency('rubocop-rake', ['~>0.7'])
+  s.add_development_dependency('rubocop-rspec', ['~>3.9'])
   s.add_development_dependency('simplecov', ['>= 0'])
 
   s.add_dependency('ostruct')
