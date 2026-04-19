@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'rubygems'
+
+# Adds build, release, etc.
 require 'bundler/gem_tasks'
 
 require 'rspec/core/rake_task'
@@ -51,7 +53,7 @@ task :update_authors do
   authors = `git log --format="%aN <%aE>"|sort -f|uniq`
   File.open('AUTHORS.txt', 'w') do |f|
     f.write("Recursive-open-struct was written by these fine people:\n\n")
-    f.write(authors.split("\n").map { |a| "* #{a}" }.join("\n"))
+    f.write(authors.split("\n").reject { |a| a.start_with?('dependabot[bot]') }.map { |a| "* #{a}" }.join("\n"))
     f.write("\n")
   end
 end
