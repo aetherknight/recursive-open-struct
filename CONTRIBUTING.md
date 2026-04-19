@@ -49,3 +49,31 @@ When contributing code that changes behavior or fixes bugs, please include unit
 tests to cover the new behavior or to provide regression testing for bugs.
 Also, treat the unit tests as documentation --- make sure they are clean,
 clear, and concise, and well organized.
+
+## Testing and Development
+
+- This project uses RSpec to both document and test behavior. Please structure
+  your tests help someone understand what is being tested.
+- It also uses rubocop to autoformat and lint the project. Run it locally
+  before committing.
+
+You can run both the test suite and the linter with the following commands:
+
+```sh
+# install/update dependencies
+bundle
+
+# run the test suite and linter
+bundle exec rake
+
+# have the linter apply all safe fixes (eg, autoformatting)
+bundle exec rake rubocop:autocorrect
+```
+
+## Release Process
+
+1. Update CHANGELOG.md and lib/recursive_open_struct/version.rb
+2. Run `bundle exec rake update_authors`
+3. Make a version release commit
+4. Run the release task (it will tag, build, push code, push package):
+   `bundle exec rake release`

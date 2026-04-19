@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 # Necessary since the top-level class/module is a class that inherits from
 # OpenStruct.
 require 'ostruct'
 
 class RecursiveOpenStruct < OpenStruct
-  VERSION = "2.1.0"
+  VERSION = '2.1.0'
 end
